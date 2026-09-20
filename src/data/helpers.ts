@@ -1,5 +1,3 @@
-import { moods } from "./dishes";
-
 export function shuffleArray<T>(items: T[]): T[] {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
@@ -9,12 +7,8 @@ export function shuffleArray<T>(items: T[]): T[] {
   return copy;
 }
 
-// Stand-in for the real facial-expression model. It only needs to keep
-// returning a { mood, confidence } shape — swap the body for the actual
-// prediction call when it's ready.
-export function runMoodPrediction(): { mood: string; confidence: number } {
-  const pool = moods.map((item) => item.name);
-  const mood = pool[Math.floor(Math.random() * pool.length)];
-  const confidence = Math.round(62 + Math.random() * 30);
-  return { mood, confidence };
-}
+// The mock random-mood stand-in that used to live here has been replaced
+// by a real, fully on-device prediction backed by MediaPipe Face
+// Landmarker. See ./mood-model.ts for the model loading, frame sampling,
+// and blendshape -> mood scoring, and App.tsx's startMoodScan/finishScan
+// for how it's wired into the scan UI.

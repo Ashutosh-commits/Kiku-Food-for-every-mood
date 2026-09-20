@@ -16,7 +16,16 @@ import {
 import { moods, discoveryDishes, recommendationSets, moodQuotes } from "./data/dishes";
 import { cravingOptions, prepTimeOptions, budgetOptions } from "./data/filters";
 import { recipeApiUrl, fallbackRecipes, normalizeRecipe, getRecipeForDish } from "./data/recipes";
-import { shuffleArray, runMoodPrediction } from "./data/helpers";
+import { shuffleArray } from "./data/helpers";
+import {
+  warmUpMoodModel,
+  readFaceSignalsFromVideo,
+  averageBlendshapes,
+  predictMoodFromBlendshapes,
+  type FaceSignals,
+} from "./data/mood-model";
+import { warmUpShadowModel, getShadowPrediction } from "./data/shadow-model";
+import { logMoodComparison } from "./data/telemetry";
 import { workflowStages } from "./data/workflow";
 import {
   ThemeIcon,
@@ -123,6 +132,8 @@ export default function App() {
   const moodVideoRef = useRef(null);
   const moodStreamRef = useRef(null);
   const scanTimeoutRef = useRef(null);
+  const moodSamplesRef = useRef<FaceSignals[]>([]);
+  const moodSampleIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
   const completionTimeoutRef = useRef(null);
   const cookingStepRef = useRef(null);
@@ -939,16 +950,56 @@ export default function App() {
     if (moodVideoRef.current) moodVideoRef.current.srcObject = null;
   };
 
+  const stopMoodSampling = () => {
+    if (moodSampleIntervalRef.current) {
+      window.clearInterval(moodSampleIntervalRef.current);
+      moodSampleIntervalRef.current = null;
+    }
+  };
+
+  // Runs entirely on-device: reads a handful of blendshape frames captured
+  // during the scan window (see startMoodScan below) and turns their
+  // average into a Kiku mood + confidence. No frame or model output ever
+  // leaves the browser.
   const finishScan = () => {
-    const prediction = runMoodPrediction();
+    stopMoodSampling();
+    const samples = moodSamplesRef.current;
+    const averaged = averageBlendshapes(samples.map((sample) => sample.blendshapes));
+    const prediction = predictMoodFromBlendshapes(averaged);
     setDetectedMood(prediction);
     stopMoodStream();
     setScanStatus("idle");
     setMoodStage("result");
+
+    // Shadow/experimental FER2013 comparison - fully background, fire-and-
+    // forget. Uses the last good frame's landmarks (already computed by
+    // the primary detection pass above, no second face detector needed).
+    // Never affects what the user sees; logged locally only, no raw frames.
+    const lastGoodSample = [...samples].reverse().find((sample) => sample.landmarks.length);
+    const scanVideo = moodVideoRef.current;
+    if (lastGoodSample && scanVideo) {
+      getShadowPrediction(scanVideo, lastGoodSample.landmarks)
+        .then((shadow) => {
+          logMoodComparison({
+            timestamp: Date.now(),
+            primaryMood: prediction.mood,
+            primaryConfidence: prediction.confidence,
+            shadowMood: shadow?.mappedMood ?? null,
+            shadowConfidence: shadow ? Math.round(shadow.ferConfidence * 100) : null,
+          });
+        })
+        .catch(() => {
+          // Shadow model is experimental and optional - silently skip
+          // logging this scan's comparison rather than surfacing an error.
+        });
+    }
   };
 
   const startMoodScan = async (facingMode = "user") => {
     window.clearTimeout(scanTimeoutRef.current);
+    stopMoodSampling();
+    warmUpMoodModel(); // no-op if already loaded/loading
+    warmUpShadowModel(); // no-op if already loaded/loading/unavailable
     setScanStatus("requesting");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
@@ -958,6 +1009,22 @@ export default function App() {
         await moodVideoRef.current.play().catch(() => {});
       }
       setScanStatus("scanning");
+
+      // Sample face signals a handful of times across the scan window
+      // instead of relying on one frame, so a blink or a half-turned head
+      // doesn't dominate the result.
+      moodSamplesRef.current = [];
+      moodSampleIntervalRef.current = window.setInterval(async () => {
+        const video = moodVideoRef.current;
+        if (!video) return;
+        try {
+          const signals = await readFaceSignalsFromVideo(video);
+          if (signals) moodSamplesRef.current.push(signals);
+        } catch (error) {
+          console.warn("Kiku mood sampling frame failed:", error);
+        }
+      }, 180);
+
       scanTimeoutRef.current = window.setTimeout(finishScan, 1800);
     } catch {
       setScanStatus("denied");
@@ -981,6 +1048,7 @@ export default function App() {
 
   const retakeMoodScan = () => {
     window.clearTimeout(scanTimeoutRef.current);
+    stopMoodSampling();
     stopMoodStream();
     setScanStatus("idle");
     setDetectedMood(null);
@@ -998,8 +1066,22 @@ export default function App() {
   useEffect(() => {
     return () => {
       window.clearTimeout(scanTimeoutRef.current);
+      stopMoodSampling();
       stopMoodStream();
     };
+  }, []);
+
+  // Preload the mood models' WASM/weights in the background shortly after
+  // the page settles, so the first real scan doesn't stall on a multi-MB
+  // download. This does not touch the camera - it only fetches static
+  // model assets. The shadow model preload silently no-ops until its
+  // converted files exist under /public/models/fer2013/.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      warmUpMoodModel();
+      warmUpShadowModel();
+    }, 2000);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const updateCarouselControls = () => {
