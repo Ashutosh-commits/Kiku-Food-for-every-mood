@@ -1,0 +1,108 @@
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - kiku-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kiku-api:
+    env_file:
+    - .env
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:4000:4000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:4000/health/live"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      HOST: 0.0.0.0
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DB_NAME: kiku
+      ALLOW_IN_MEMORY: "false"
+      SESSION_SECRET: change-me-to-a-random-32-plus-character-secret
+      COMPARE_SERVICE_URL: http://host.docker.internal:8000
+      REDIS_URL: redis://redis:6379
+      REQUIRE_REDIS: "true"
+      TRUSTED_ORIGINS: http://localhost:4000,http://localhost:5173
+      AUTOMATION_ENABLED: "true"
+      REQUIRE_AUTOMATION: "false"
+      AUTOMATION_HEARTBEAT_TTL_MS: "90000"
+      AUTOMATION_ACTIVE_USER_DAYS: "30"
+      AUTOMATION_USER_BATCH_SIZE: "500"
+      COMPARISON_CACHE_TTL_MS: "60000"
+      COMPARISON_REFRESH_LEAD_MS: "10000"
+      COMPARISON_KEEP_WARM_HOURS: "6"
+      PROVIDER_HEALTH_EVERY_MS: "10800000"
+      RECIPE_SYNC_EVERY_MS: "43200000"
+      INSIGHTS_ROLLUP_EVERY_MS: "900000"
+      RECOMMENDATION_ROLLUP_EVERY_MS: "1800000"
+      RECOMMENDATION_CACHE_TTL_MS: "900000"
+      MAINTENANCE_EVERY_MS: "3600000"
+
+  kiku-worker:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DB_NAME: kiku
+      ALLOW_IN_MEMORY: "false"
+      SESSION_SECRET: change-me-to-a-random-32-plus-character-secret
+      COMPARE_SERVICE_URL: http://host.docker.internal:8000
+      REDIS_URL: redis://redis:6379
+      REDIS_PREFIX: kiku
+      REQUIRE_REDIS: "true"
+      AUTOMATION_ENABLED: "true"
+      REQUIRE_AUTOMATION: "false"
+      AUTOMATION_HEARTBEAT_TTL_MS: "90000"
+      AUTOMATION_ACTIVE_USER_DAYS: "30"
+      AUTOMATION_USER_BATCH_SIZE: "500"
+      COMPARISON_CACHE_TTL_MS: "60000"
+      COMPARISON_REFRESH_LEAD_MS: "10000"
+      COMPARISON_KEEP_WARM_HOURS: "6"
+      PROVIDER_HEALTH_EVERY_MS: "10800000"
+      RECIPE_SYNC_EVERY_MS: "43200000"
+      INSIGHTS_ROLLUP_EVERY_MS: "900000"
+      RECOMMENDATION_ROLLUP_EVERY_MS: "1800000"
+      RECOMMENDATION_CACHE_TTL_MS: "900000"
+      MAINTENANCE_EVERY_MS: "3600000"
+
+volumes:
+  kiku-mongo-data:

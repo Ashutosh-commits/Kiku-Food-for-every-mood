@@ -1,0 +1,46 @@
+{
+  "name": "kiku",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "vite build",
+    "server": "node server/index.js",
+    "start": "npm run build && npm run server",
+    "test": "node --test server/tests/*.test.js",
+    "typecheck": "tsc --noEmit --pretty false",
+    "security": "npm audit --omit=dev",
+    "security:all": "npm audit --audit-level=high",
+    "static-check": "node scripts/static-check.mjs",
+    "worker": "node server/automation/worker.js",
+    "automation:setup": "node server/automation/setup.js",
+    "automation:once": "node server/automation/worker.js --once",
+    "stress-test": "node scripts/stress-test.mjs",
+    "region-stress-test": "node scripts/region-stress-test.mjs"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^1.0.1",
+    "express": "^5.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "express-rate-limit": "^8.7.0",
+    "google-auth-library": "^10.4.0",
+    "helmet": "^8.1.0",
+    "mongodb": "^7.6.0",
+    "zod": "^4.6.5",
+    "redis": "^6.2.1",
+    "rate-limit-redis": "^6.0.1",
+    "bullmq": "^6.3.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.0",
+    "typescript": "^7.0.2",
+    "@types/node": "^22.20.4",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1"
+  }
+}
