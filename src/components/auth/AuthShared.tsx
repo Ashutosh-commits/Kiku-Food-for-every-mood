@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+<<<<<<< HEAD
+=======
+import { getKikuProfile, saveKikuProfile } from "../../stores/profile-store";
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import { ThemeIcon } from "../icons/ui-icons";
 
 export function AuthIcon({ type }: { type: string }) {
@@ -42,11 +46,26 @@ function useGoogleIdentity(onSuccess, onError) {
         window.google.accounts.id.initialize({
           client_id: clientId,
           callback: (response) => {
+<<<<<<< HEAD
             if (!response?.credential) {
               errorRef.current?.("Google sign-in returned no credential.");
               return;
             }
             callbackRef.current?.(response.credential);
+=======
+            try {
+              const parts = response.credential.split(".");
+              const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+              callbackRef.current?.({
+                name: payload.name || payload.given_name || "Google member",
+                email: payload.email || "",
+                avatar: payload.picture || null,
+                provider: "google",
+              });
+            } catch {
+              errorRef.current?.("Google sign-in returned an unreadable response.");
+            }
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           },
           ux_mode: "popup",
           auto_select: false,
@@ -92,7 +111,11 @@ export function AuthLayout({ darkMode, setDarkMode, eyebrow, title, subtitle, ch
           <p>{subtitle}</p>
           <div className="kiku-auth-trust">
             <span>⌁</span>
+<<<<<<< HEAD
             <p>Your Kiku preferences and saved choices sync to your account. Your PIN is used only as a discovery hint and is not treated as an exact delivery location.</p>
+=======
+            <p>Your Kiku preferences stay on this device. Your PIN is used only to keep suggestions focused on your area.</p>
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           </div>
         </div>
         <div className="kiku-auth-card">
@@ -105,7 +128,11 @@ export function AuthLayout({ darkMode, setDarkMode, eyebrow, title, subtitle, ch
   );
 }
 
+<<<<<<< HEAD
 export function GoogleButton({ onSuccess, onError, disabled = false }) {
+=======
+export function GoogleButton({ onSuccess, onError }) {
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const { clientId, signIn } = useGoogleIdentity(onSuccess, onError);
   const googleButtonRef = useRef(null);
   const [officialReady, setOfficialReady] = useState(false);
@@ -137,9 +164,15 @@ export function GoogleButton({ onSuccess, onError, disabled = false }) {
 
   return (
     <>
+<<<<<<< HEAD
       {clientId && <div ref={googleButtonRef} className={`kiku-google-render ${officialReady ? "ready" : ""}`} aria-label="Continue with Google" aria-disabled={disabled} />}
       {!clientId && (
         <button type="button" className="kiku-google-button" onClick={signIn} disabled={disabled}>
+=======
+      {clientId && <div ref={googleButtonRef} className={`kiku-google-render ${officialReady ? "ready" : ""}`} aria-label="Continue with Google" />}
+      {!clientId && (
+        <button type="button" className="kiku-google-button" onClick={signIn}>
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           <span className="kiku-google-mark" aria-hidden="true">G</span>
           <span>Continue with Google</span>
         </button>

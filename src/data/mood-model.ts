@@ -1,7 +1,11 @@
 /**
  * On-device mood detection for Kiku's "Scan My Mood" feature.
  *
+<<<<<<< HEAD
  * Uses a real,
+=======
+ * Replaces the previous stand-in `runMoodPrediction()` mock with a real,
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
  * fully client-side signal built on MediaPipe's Face Landmarker task. This
  * satisfies Kiku's non-negotiable privacy rule: the model, its weights, and
  * every video frame it looks at stay in the browser. Nothing is uploaded.
@@ -20,7 +24,12 @@
  * Happy / Calm / Stressed / Tired / Excited / Cozy) is a hand-tuned
  * heuristic, not a trained classifier. There is no labeled dataset yet
  * mapping real faces to Kiku's specific six mood categories. This is a
+<<<<<<< HEAD
  * real, working v1 signal, but it should be treated as a starting point. Once real (consenting, opt-in) usage data exists, the
+=======
+ * real, working v1 signal - not a mock - but it should be treated as a
+ * starting point. Once real (consenting, opt-in) usage data exists, the
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
  * `scoreMood()` function is the one place to swap in a small trained
  * classifier (e.g. a shallow MLP or logistic regression over the same
  * blendshape vector) without touching anything else in this file or in
@@ -40,6 +49,11 @@ export interface MoodPrediction {
   confidence: number; // 0-100
 }
 
+<<<<<<< HEAD
+=======
+type NormalizedLandmark = { x: number; y: number; z: number };
+
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 // The MediaPipe task type isn't imported eagerly - the whole
 // `@mediapipe/tasks-vision` package (WASM + JS glue) is only fetched the
 // first time a scan actually needs it, via a dynamic import. This keeps it
@@ -50,6 +64,10 @@ type FaceLandmarkerInstance = {
     timestampMs: number
   ) => {
     faceBlendshapes?: { categories: { categoryName: string; score: number }[] }[];
+<<<<<<< HEAD
+=======
+    faceLandmarks?: NormalizedLandmark[][];
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 };
 
@@ -67,10 +85,14 @@ async function getLandmarker(): Promise<FaceLandmarkerInstance> {
         outputFaceBlendshapes: true,
         outputFacialTransformationMatrixes: false,
       }) as unknown as Promise<FaceLandmarkerInstance>;
+<<<<<<< HEAD
     })().catch((error) => {
       landmarkerPromise = null;
       throw error;
     });
+=======
+    })();
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   }
   return landmarkerPromise;
 }
@@ -90,12 +112,25 @@ export function warmUpMoodModel(): void {
 
 export interface FaceSignals {
   blendshapes: BlendshapeMap;
+<<<<<<< HEAD
 }
 
 /**
  * Reads one frame from the given <video> element and returns its blendshape
  * scores from a single detection pass, or null if no face was found in that
  * frame (occluded, turned away,
+=======
+  /** Normalized (0-1) face landmark points from the same detection pass,
+   * for anything that needs a face crop (e.g. the shadow model) without
+   * running a second, separate face detector. */
+  landmarks: NormalizedLandmark[];
+}
+
+/**
+ * Reads one frame from the given <video> element and returns both its
+ * blendshape scores and its raw landmark points from a single detection
+ * pass, or null if no face was found in that frame (occluded, turned away,
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
  * too dark, etc.). Callers should sample several frames across the scan
  * window rather than relying on a single reading.
  */
@@ -107,13 +142,21 @@ export async function readFaceSignalsFromVideo(
   const landmarker = await getLandmarker();
   const result = landmarker.detectForVideo(video, performance.now());
   const categories = result?.faceBlendshapes?.[0]?.categories;
+<<<<<<< HEAD
+=======
+  const landmarks = result?.faceLandmarks?.[0];
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   if (!categories || !categories.length) return null;
 
   const blendshapes: BlendshapeMap = {};
   for (const category of categories) {
     blendshapes[category.categoryName] = category.score;
   }
+<<<<<<< HEAD
   return { blendshapes };
+=======
+  return { blendshapes, landmarks: landmarks ?? [] };
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }
 
 /**

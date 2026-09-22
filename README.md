@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Kiku
 
 ### Food for every mood.
@@ -506,3 +507,24 @@ For the pincode-first live discovery architecture, see:
 - `REGIONAL_SCRAPER_CONTRACT.md` — required live scraper API contract.
 
 The live regional path starts from `POST /api/region/refresh` and is isolated by pincode. GitHub Actions should be used for background refresh/maintenance, not as the latency-sensitive live scraper trigger.
+=======
+# Kiku Frontend
+
+Kiku is a Vite + React + TypeScript frontend.
+
+## Structure
+
+- `src/components/` reusable UI components
+- `src/pages/` page-level screens grouped by domain
+- `src/data/` static data and feature helpers
+- `src/stores/` local application state/persistence
+- `src/types/` shared TypeScript contracts
+- `src/utils/` small cross-feature utilities
+- `src/App.tsx` application composition and page state
+
+## Scripts
+
+- `npm run dev` starts Vite development mode
+- `npm run build` creates a production build
+- `npm run preview` previews the production build
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc

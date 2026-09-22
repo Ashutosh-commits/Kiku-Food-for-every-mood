@@ -5,18 +5,31 @@ const content = {
     intro: "Kiku helps you move from a feeling or craving to a dish, a restaurant, a price comparison, or a recipe you can cook at home.",
     sections: [
       ["Discover", "Explore dishes and restaurants that match your moment."],
+<<<<<<< HEAD
       ["Compare", "See current menu prices Kiku can verify for the same dish across supported platforms."],
+=======
+      ["Compare", "See the price and delivery details Kiku has available for the same dish."],
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       ["Cook", "Open recipe pages and guided cooking mode when you'd rather make it yourself."],
     ],
   },
   privacy: {
     eyebrow: "PRIVACY",
+<<<<<<< HEAD
     title: "Clear, secure, and in your hands.",
     intro: "Kiku stores account-backed settings and saved choices on your secure account, while camera frames remain local to the device during a mood scan.",
     sections: [
       ["Account data", "Profile details, saved items, preferences, activity, and assistant history are associated with your Kiku account."],
       ["Mood choices", "Manual mood and expression signals can personalize recommendations without uploading raw camera frames."],
       ["Delete anytime", "Use Mood & Privacy in Profile & Settings to delete your Kiku account data."],
+=======
+    title: "Clear, local, and in your hands.",
+    intro: "Kiku's current profile experience stores personal settings and saved choices locally on your device.",
+    sections: [
+      ["Local storage", "Profile details, saved items, and preferences are kept in the browser for this experience."],
+      ["Mood choices", "Your mood and preference selections are used to personalize recommendations on the device."],
+      ["Delete anytime", "Use Mood & Privacy in Profile & Settings to clear the locally stored Kiku data."],
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     ],
   },
   support: {
@@ -25,7 +38,11 @@ const content = {
     intro: "Find answers about saving dishes, changing preferences, using the assistant, and moving between recipe and cooking mode.",
     sections: [
       ["Ask Kiku", "Open the assistant for quick dish ideas based on your craving and saved preferences."],
+<<<<<<< HEAD
       ["Profile & Settings", "Edit your details, update food preferences, manage saved items, or delete account data."],
+=======
+      ["Profile & Settings", "Edit your details, update food preferences, manage saved items, or clear local data."],
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       ["Still stuck?", "Use the Kiku navigation to return to Discover, Search, Mood, or Recipes and start again."],
     ],
   },

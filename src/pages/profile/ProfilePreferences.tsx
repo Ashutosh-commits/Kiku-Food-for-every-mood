@@ -1,9 +1,13 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import type { KikuPreferences } from "../../types";
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import { getKikuPreferences, saveKikuPreferences } from "../../stores/profile-store";
 
 const dietaryOptions = ["Vegetarian", "Vegan", "No Eggs", "Healthy", "Quick", "Comfort food", "Spicy", "Sweet"];
 const allergyOptions = ["Nuts", "Dairy", "Eggs", "Gluten", "Soy"];
+<<<<<<< HEAD
 const cuisineOptions = ["Indian", "Italian", "Chinese", "Thai", "Japanese", "Mexican", "Continental"];
 const spiceOptions: Array<{ value: KikuPreferences["spiceLevel"]; label: string }> = [
   { value: null, label: "Any spice level" },
@@ -17,6 +21,8 @@ const numberValue = (value: string) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
 };
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
 export default function ProfilePreferencesPage({ onBack }) {
   const [preferences, setPreferences] = useState(getKikuPreferences);
@@ -29,9 +35,13 @@ export default function ProfilePreferencesPage({ onBack }) {
   };
 
   const save = () => {
+<<<<<<< HEAD
     const budgetMin = preferences.budgetMin == null ? null : Math.min(preferences.budgetMin, preferences.budgetMax ?? preferences.budgetMin);
     const budgetMax = preferences.budgetMax == null ? null : Math.max(preferences.budgetMin ?? 0, preferences.budgetMax);
     saveKikuPreferences({ ...preferences, budgetMin, budgetMax });
+=======
+    saveKikuPreferences(preferences);
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     onBack();
   };
 
@@ -50,6 +60,7 @@ export default function ProfilePreferencesPage({ onBack }) {
       </div>
 
       <div className="profile-preference-card">
+<<<<<<< HEAD
         <div className="profile-choice-section"><div><span className="eyebrow">CUISINES</span><h2>What do you reach for?</h2></div><p>Select cuisines Kiku should favor when it builds personalized recommendations.</p></div>
         <div className="profile-choice-grid">
           {cuisineOptions.map((option) => <button type="button" key={option} className={`profile-choice ${preferences.cuisines.includes(option) ? "active" : ""}`} onClick={() => toggle("cuisines", option)}>{option}</button>)}
@@ -72,6 +83,8 @@ export default function ProfilePreferencesPage({ onBack }) {
       </div>
 
       <div className="profile-preference-card">
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         <div className="profile-choice-section"><div><span className="eyebrow">ALLERGIES</span><h2>What should Kiku avoid?</h2></div><p>Kiku uses these saved signals when filtering recommendations. Always verify ingredients with the restaurant before ordering.</p></div>
         <div className="profile-choice-grid">
           {allergyOptions.map((option) => <button type="button" key={option} className={`profile-choice ${preferences.allergies.includes(option) ? "active" : ""}`} onClick={() => toggle("allergies", option)}>{option}</button>)}

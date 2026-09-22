@@ -2753,6 +2753,7 @@ html.kiku-dark body {
   font-weight: 800;
 }
 
+<<<<<<< HEAD
 .dish-modal-comparison-alert {
   display: flex;
   align-items: flex-start;
@@ -2773,6 +2774,8 @@ html.kiku-dark body {
   line-height: 1.45;
 }
 
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 .dish-modal-note {
   margin: 0 auto 18px;
   padding: 11px 16px;
@@ -2930,12 +2933,15 @@ html.kiku-dark body {
   background: rgba(255,255,255,.06);
 }
 
+<<<<<<< HEAD
 .landing-page.dark-mode .dish-modal-comparison-alert {
   border-color: rgba(255, 255, 255, .10);
   background: rgba(255,255,255,.045);
   color: #d8c8cf;
 }
 
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 .landing-page.dark-mode .similar-dish-card strong {
   color: #ffeaf0;
 }
@@ -3841,6 +3847,7 @@ html.kiku-dark body {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 .dietary-safe-toggle {
   min-height: 42px;
   padding: 0 12px;
@@ -3862,6 +3869,8 @@ html.kiku-dark body {
   border-color: rgba(112,49,70,.28);
 }
 
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 .veg-icon-toggle.active {
   background: rgba(220, 245, 227, .96);
   border-color: rgba(44,130,71,.36);
@@ -7124,6 +7133,7 @@ button.kiku-recipe-card {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 .recipe-allergen-banner {
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr);
@@ -7168,6 +7178,8 @@ button.kiku-recipe-card {
   color: #f5e2bc;
 }
 
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 .recipe-description {
   margin: 28px 0 28px;
   max-width: 950px;
@@ -7360,8 +7372,13 @@ button.kiku-recipe-card {
   position: absolute;
   inset: 0;
   background:
+<<<<<<< HEAD
     radial-gradient(circle at 18% 18%, rgba(255, 219, 203, .18), transparent 34%),
     linear-gradient(180deg, rgba(12,7,9,.30) 0%, rgba(28,8,15,.72) 68%, rgba(29,8,15,.97) 100%);
+=======
+    linear-gradient(180deg, rgba(12,7,9,.38) 0%, rgba(28,8,15,.76) 68%, rgba(29,8,15,.96) 100%),
+    url("/butter-chicken-cooking.jpg") center / cover no-repeat;
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   filter: saturate(.98);
 }
 
@@ -8058,8 +8075,13 @@ button.kiku-recipe-card {
 
 .cooking-background {
   background:
+<<<<<<< HEAD
     radial-gradient(circle at 82% 22%, rgba(255, 219, 203, .12), transparent 34%),
     linear-gradient(180deg, rgba(18, 7, 11, .40) 0%, rgba(31, 9, 18, .76) 70%, rgba(29, 8, 15, .97) 100%);
+=======
+    linear-gradient(180deg, rgba(18, 7, 11, .45) 0%, rgba(31, 9, 18, .78) 70%, rgba(29, 8, 15, .96) 100%),
+    url("/butter-chicken-cooking.jpg") center / cover no-repeat;
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }
 
 .cooking-topbar {
@@ -11869,6 +11891,7 @@ button.kiku-recipe-card {
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .assistant-dish-card:hover { transform: translateY(-3px); box-shadow: 0 16px 30px rgba(92,46,61,.13); }
+<<<<<<< HEAD
  .assistant-linked-card { display:block; color:inherit; text-decoration:none; }
 .assistant-dish-art { position:relative; overflow:hidden; }
 .assistant-dish-art img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -11885,6 +11908,8 @@ button.kiku-recipe-card {
 .assistant-recipe-card-copy strong { display:block; margin-top:4px; font-size:17px; }
 .assistant-recipe-card-copy > span:not(.assistant-recipe-card-kicker):not(.assistant-external-link):not(.assistant-card-link-hint) { display:block; margin-top:4px; color:#8a707c; font-size:12px; }
 .assistant-recipe-card-copy b { display:block; margin-top:8px; font-size:13px; }
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 .assistant-dish-art { aspect-ratio: 1.35; display:grid; place-items:center; font-size: clamp(46px, 6vw, 80px); }
 .assistant-dish-copy { padding: 12px 14px 15px; }
 .assistant-dish-copy strong { display:block; font-size:18px; }
@@ -11929,7 +11954,10 @@ button.kiku-recipe-card {
   .assistant-modal { width: 100%; max-height: calc(100vh - 24px); border-radius: 26px; padding: 18px; }
   .assistant-dish-grid { grid-template-columns: 1fr 1fr; }
   .assistant-dish-card:last-child { grid-column: 1 / -1; }
+<<<<<<< HEAD
   .assistant-recipe-grid { grid-template-columns: 1fr; }
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   .assistant-message { max-width: 94%; }
 }
 
@@ -12904,6 +12932,7 @@ button.kiku-recipe-card {
   background: rgba(82,34,49,.72);
   border-color: rgba(255,214,228,.22);
 }
+<<<<<<< HEAD
 
 .kiku-auth-inline-row { display: flex; justify-content: flex-end; margin-top: -4px; }
 .kiku-auth-inline-link { border: 0; background: transparent; padding: 0; color: #a63358; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
@@ -13916,3 +13945,5 @@ button.kiku-recipe-card {
 .profile-budget-grid label { display: grid; gap: 8px; font-size: 13px; font-weight: 600; }
 .profile-budget-grid input { width: 100%; box-sizing: border-box; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.04); color: inherit; padding: 12px 14px; font: inherit; }
 @media (max-width: 640px) { .profile-budget-grid { grid-template-columns: 1fr; } }
+=======
+>>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
