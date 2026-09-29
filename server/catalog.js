@@ -25,7 +25,7 @@ export async function listDishes({ q = "", restaurant = "", limit = 50, dietary 
   if (normalizedPincode) {
     const regional = collection("regionalCatalog");
     const snapshot = regional ? await regional.findOne({ pincode: normalizedPincode }) : null;
-    if (snapshot?.status === "ready") {
+    if (snapshot && ["ready", "stale"].includes(snapshot.status)) {
       const source = Array.isArray(snapshot.dishes) ? snapshot.dishes : [];
       const filtered = source.filter((dish) => {
         if (restaurant && !String(dish.restaurant || "").toLowerCase().includes(normalizedRestaurant)) return false;
@@ -79,7 +79,7 @@ export async function listRestaurants({ q = "", limit = 30, pincode = null } = {
   if (normalizedPincode) {
     const regional = collection("regionalCatalog");
     const snapshot = regional ? await regional.findOne({ pincode: normalizedPincode }) : null;
-    if (snapshot?.status === "ready") {
+    if (snapshot && ["ready", "stale"].includes(snapshot.status)) {
       const source = Array.isArray(snapshot.restaurants) ? snapshot.restaurants : [];
       const result = source.filter((restaurant) => !q || [restaurant.name, restaurant.cuisine, ...(Array.isArray(restaurant.tags) ? restaurant.tags : [])].join(" ").toLowerCase().includes(normalizedQuery)).slice(0, boundedLimit);
       await setJson(cacheKey, result, 60_000);

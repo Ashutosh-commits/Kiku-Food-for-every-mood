@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-<<<<<<< HEAD
   server: {
     host: process.env.VITE_DEV_HOST || "127.0.0.1",
     // In dev, the Vite server (this process) renders the frontend, and
@@ -19,6 +18,4 @@ export default defineConfig({
       },
     },
   },
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 });

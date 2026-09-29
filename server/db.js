@@ -25,15 +25,37 @@ export async function connectDb() {
     return null;
   }
 
-  client = new MongoClient(config.mongoUri, {
-    maxPoolSize: 20,
-    minPoolSize: 1,
-    serverSelectionTimeoutMS: 5000,
-  });
-  await client.connect();
-  database = client.db(config.mongoDbName);
-  await createIndexes(database);
-  return database;
+  const maxAttempts = Math.max(1, Number(process.env.MONGO_CONNECT_RETRIES || 15));
+  const retryDelayMs = Math.max(250, Number(process.env.MONGO_CONNECT_RETRY_DELAY_MS || 2000));
+  const serverSelectionTimeoutMS = Math.max(1000, Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS || 5000));
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      client = new MongoClient(config.mongoUri, {
+        maxPoolSize: 20,
+        minPoolSize: 1,
+        serverSelectionTimeoutMS,
+      });
+      await client.connect();
+      database = client.db(config.mongoDbName);
+      await createIndexes(database);
+      console.info(`[db] MongoDB connected on attempt ${attempt}.`);
+      return database;
+    } catch (error) {
+      lastError = error;
+      database = null;
+      if (client) {
+        try { await client.close(); } catch {}
+      }
+      client = null;
+      if (attempt >= maxAttempts) break;
+      console.warn(`[db] MongoDB connection attempt ${attempt}/${maxAttempts} failed: ${error?.code || error?.name || 'unknown'}. Retrying in ${retryDelayMs}ms.`);
+      await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+    }
+  }
+
+  throw lastError || new Error("MongoDB connection failed.");
 }
 
 export async function closeDb() {

@@ -47,3 +47,10 @@ Use normal HTTP semantics:
 - `5xx` for scraper/provider failure.
 
 Do not return HTTP 200 with a fabricated successful empty catalog when upstream scraping actually failed.
+
+
+## Persistent regional cache
+
+The Kiku API persists each verified six-digit pincode snapshot in MongoDB and uses Redis as a hot cache. A non-empty verified snapshot is fresh for 24 hours by default, so repeated requests for the same pincode do not trigger repeated upstream regional scrapes during that window. Expired snapshots are retained for up to 7 days and may be served as stale fallback if the next upstream refresh fails.
+
+The persistent cache is keyed by exact pincode. Kiku must never populate a regional snapshot from a city/locality-only match.

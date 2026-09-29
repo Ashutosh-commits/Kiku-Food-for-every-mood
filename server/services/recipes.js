@@ -110,6 +110,41 @@ async function fetchMeals(path) {
   return Array.isArray(data?.meals) ? data.meals : [];
 }
 
+async function indianMeals(count = 6) {
+  const safeCount = Math.max(1, Math.min(count, 8));
+  try {
+    const meals = await fetchMeals("filter.php?a=Indian");
+    const shuffled = [...meals].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, safeCount);
+  } catch {
+    return [];
+  }
+}
+
+async function mixedRecipeFeed() {
+  const [indian, random] = await Promise.all([indianMeals(6), randomMeals(10)]);
+  const seen = new Set();
+  const selected = [];
+
+  for (const meal of indian) {
+    if (!meal?.idMeal || seen.has(meal.idMeal)) continue;
+    seen.add(meal.idMeal);
+    selected.push(meal);
+    if (selected.length >= 6) break;
+  }
+
+  // Keep the default feed at 8 cards with at least 75% Indian recipes.
+  for (const meal of random) {
+    if (!meal?.idMeal || seen.has(meal.idMeal)) continue;
+    if (String(meal?.strArea || "").trim().toLowerCase() === "indian") continue;
+    seen.add(meal.idMeal);
+    selected.push(meal);
+    if (selected.length >= 8) break;
+  }
+
+  return selected.slice(0, 8);
+}
+
 async function randomMeals(count = 6) {
   const settled = await Promise.allSettled(Array.from({ length: Math.max(1, Math.min(count, 8)) }, () => fetchMeals("random.php")));
   const seen = new Set();
@@ -229,7 +264,7 @@ export async function getRecipes(query = "") {
   const cached = await cacheGet(cacheKey);
   if (cached) return cached;
   try {
-    const meals = q ? await fetchMeals(`search.php?s=${encodeURIComponent(q)}`) : await randomMeals(6);
+    const meals = q ? await fetchMeals(`search.php?s=${encodeURIComponent(q)}`) : await mixedRecipeFeed();
     const normalized = meals.map(normalizeMeal);
     return cacheSet(cacheKey, { source: "recipe-provider", provider: "TheMealDB", attribution: "Recipe data provided by TheMealDB.", recipes: normalized }, RECIPE_SEARCH_TTL_MS);
   } catch {

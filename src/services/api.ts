@@ -61,8 +61,8 @@ export const api = {
   removeSaved: (entityType: string, entityKey: string) => request<{ ok: true }>(`/api/saved/${encodeURIComponent(entityType)}/${encodeURIComponent(entityKey)}`, { method: "DELETE" }),
   activity: (body: any) => request<{ event: any }>("/api/activity", { method: "POST", body: JSON.stringify(body) }),
   insights: () => request<any>("/api/insights"),
-  regionRefresh: (pincode: string) => request<{ pincode: string; status: "ready" | "scraping" | "queued"; dishesCount?: number; restaurantsCount?: number }>("/api/region/refresh", { method: "POST", body: JSON.stringify({ pincode }) }),
-  regionStatus: (pincode: string) => request<{ pincode: string; status: "idle" | "scraping" | "queued" | "ready" | "stale" | "error"; dishes?: any[]; restaurants?: any[]; dishesCount?: number; restaurantsCount?: number; checkedAt?: string | null; error?: string | null }>(`/api/region/${encodeURIComponent(pincode)}`),
+  regionRefresh: (pincode: string, force = false) => request<{ pincode: string; status: "ready" | "empty" | "scraping" | "queued" | "stale" | "error"; dishesCount?: number; restaurantsCount?: number; warning?: string | null }>("/api/region/refresh", { method: "POST", body: JSON.stringify({ pincode, force }) }),
+  regionStatus: (pincode: string) => request<{ pincode: string; status: "idle" | "scraping" | "queued" | "ready" | "empty" | "stale" | "error"; dishes?: any[]; restaurants?: any[]; dishesCount?: number; restaurantsCount?: number; checkedAt?: string | null; error?: string | null; warning?: string | null }>(`/api/region/${encodeURIComponent(pincode)}`),
   discover: (q = "", filters: { dietary?: string[]; allergies?: string[]; allergenFreeOnly?: boolean; pincode?: string } = {}) => request<{ dishes: any[]; restaurants: any[] }>(`/api/discover?${new URLSearchParams({
     ...(q ? { q } : {}),
     ...(filters.pincode ? { pincode: filters.pincode } : {}),
@@ -83,6 +83,7 @@ export const api = {
   substituteRecipe: (body: { recipe: any; ingredient: string; substitute: string }) => request<any>("/api/recipes/substitute", { method: "POST", body: JSON.stringify(body) }),
   enrichRecipe: (recipe: any) => request<any>("/api/recipes/enrich", { method: "POST", body: JSON.stringify({ recipe }) }),
   compare: (body: any, signal?: AbortSignal) => request<any>("/api/compare", { method: "POST", body: JSON.stringify(body), signal }),
+  dishDescription: (body: { name: string; restaurant?: string; category?: string; cuisine?: string; provider?: string; sourceDescription?: string; city?: string; pincode?: string | null }) => request<{ description: string; generated: boolean; provider: string }>("/api/dish-description", { method: "POST", body: JSON.stringify(body) }),
   assistant: (body: { message: string; conversationId?: string | null; recipeContext?: any | null }) => request<{ conversationId: string; message: string; data: any; usedModel: boolean; aiProvider?: "cloudflare" | "deterministic" }>("/api/assistant/message", { method: "POST", body: JSON.stringify(body) }, ASSISTANT_REQUEST_TIMEOUT_MS),
   assistantConversations: () => request<{ conversations: Array<{ id: string; title: string; createdAt: string; updatedAt: string }> }>("/api/assistant/conversations"),
   assistantMessages: (conversationId: string) => request<{ messages: Array<{ role: "user" | "assistant"; content: string; data: any; createdAt: string }> }>(`/api/assistant/conversations/${encodeURIComponent(conversationId)}/messages`),

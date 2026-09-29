@@ -38,7 +38,7 @@ async function requestOnce(payload) {
   try {
     const { response, data } = await fetchJsonLimited(`${base}/api/v1/compare`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: { "Content-Type": "application/json", Accept: "application/json", ...(config.compareServiceApiKey ? { "X-Scraper-Api-Key": config.compareServiceApiKey } : {}) },
       body: JSON.stringify(payload),
       signal: controller.signal,
     }, 2 * 1024 * 1024);

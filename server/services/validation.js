@@ -52,6 +52,18 @@ export const activitySchema = z.object({
   metadata: z.record(z.string(), z.any()).optional().refine((value) => value == null || JSON.stringify(value).length <= 12_000, "Activity metadata is too large."),
 });
 
+
+export const dishDescriptionSchema = z.object({
+  name: z.string().trim().min(1).max(160),
+  restaurant: z.string().trim().max(160).optional().default(""),
+  category: z.string().trim().max(100).optional().default(""),
+  cuisine: z.string().trim().max(120).optional().default(""),
+  provider: z.string().trim().max(40).optional().default(""),
+  sourceDescription: z.string().trim().max(1500).optional().default(""),
+  city: z.string().trim().max(120).optional().default(""),
+  pincode: z.string().regex(/^[1-9]\d{5}$/).optional().nullable(),
+});
+
 export const recommendationSchema = z.object({
   expressionSignal: z.object({ label: z.string().max(50), confidence: z.number().min(0).max(1) }).nullable().optional(),
   manualMood: z.string().trim().max(50).nullable().optional(),

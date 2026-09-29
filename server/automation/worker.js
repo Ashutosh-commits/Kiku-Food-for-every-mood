@@ -65,6 +65,8 @@ async function warmRecipes(queries) {
 
 async function refreshComparison(body) {
   const key = JSON.stringify([body.location || "", body.pincode || "", String(body.restaurant || "").toLowerCase(), body.dish || ""]);
+  const fresh = await getComparisonCache(key);
+  if (fresh) return { skipped: true, reason: "cache-still-fresh" };
   const requests = collection("comparisonRequests");
   const current = requests ? await requests.findOne({ key }, { projection: { lastSeenAt: 1 } }) : null;
   if (!current) return { skipped: true, reason: "no-observed-demand" };
@@ -73,7 +75,7 @@ async function refreshComparison(body) {
   if (!lockToken) return { skipped: true, reason: "locked" };
   try {
     const result = normalizeComparison(await compareViaScraper(body));
-    await setComparisonCache(key, result, config.comparisonCacheTtlMs);
+    await setComparisonCache(key, result, config.comparisonCacheTtlMs, config.comparisonCacheRetentionTtlMs);
     return result;
   } finally {
     await releaseLock(`compare:${key}`, lockToken);

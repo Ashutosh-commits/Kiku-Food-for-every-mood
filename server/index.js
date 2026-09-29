@@ -9,16 +9,17 @@ import { config, assertProductionConfig } from "./config.js";
 import { connectDb, closeDb, isMongo, pingDb, collection, memoryStore } from "./db.js";
 import { authMiddleware, cleanUser, clearSession, createUser, issueVerificationEmail, loginWithGoogle, loginWithPassword, requireAuth, resetPassword, updateUser, verifyEmail, requestPasswordReset } from "./auth.js";
 import { listDishes, getDish, listRestaurants, getRestaurant } from "./catalog.js";
-import { regionSchema, compareSchema, parseBody, registerSchema, loginSchema, googleSchema, profileSchema, preferencesSchema, savedSchema, activitySchema, recommendationSchema, assistantSchema, recipeSubstitutionSchema, recipeResearchSchema, emailTokenSchema, forgotPasswordSchema, resetPasswordSchema } from "./services/validation.js";
+import { regionSchema, compareSchema, parseBody, registerSchema, loginSchema, googleSchema, profileSchema, preferencesSchema, savedSchema, activitySchema, recommendationSchema, assistantSchema, recipeSubstitutionSchema, recipeResearchSchema, dishDescriptionSchema, emailTokenSchema, forgotPasswordSchema, resetPasswordSchema } from "./services/validation.js";
 import { getPreferences, updatePreferences } from "./services/preferences.js";
 import { listSaved, toggleSaved, removeSaved } from "./services/saved.js";
 import { buildRecommendations } from "./services/recommendations.js";
 import { recordActivity, listActivity, buildInsights } from "./services/activity.js";
 import { getRecipes, getRecipeById } from "./services/recipes.js";
-import { getComparisonCache, setComparisonCache } from "./services/comparison-cache.js";
+import { getComparisonCache, getStaleComparisonCache, setComparisonCache } from "./services/comparison-cache.js";
 import { compareViaScraper, normalizeComparison, filterComparison, getComparisonProviderHealth } from "./providers/compare.js";
 import { sendAssistantMessage, listConversations, getConversationMessages } from "./services/assistant.js";
 import { cloudflareAiConfigured } from "./services/cloudflare-ai.js";
+import { describeDish } from "./services/dish-description.js";
 import { createRecipeVariant } from "./services/recipe-substitutions.js";
 import { connectRedis, closeRedis, isRedisReady, pingRedis, redisClient, redisHealth, acquireLock, releaseLock, waitForCache, deleteKey, getJson } from "./redis.js";
 import { queueComparisonRefresh } from "./automation/jobs.js";
@@ -175,16 +176,16 @@ function queryList(value, max = 20) {
 
 app.post("/api/region/refresh", regionRefreshLimiter, async (req, res, next) => { try {
   const body = parseBody(regionSchema, req.body);
-  const result = await requestRegionRefresh(body.pincode);
+  const result = await requestRegionRefresh(body.pincode, { force: body.force });
   const statusCode = result.status === "ready" ? 200 : result.status === "queued" ? 202 : 202;
   res.status(statusCode).json(result);
 } catch (error) { next(error); } });
 app.get("/api/region/:pincode", regionStatusLimiter, async (req, res, next) => { try {
   const result = await getRegionStatus(req.params.pincode);
   if (result.status === "invalid") return res.status(400).json({ error: { code: "REGION_INVALID_PIN", message: "Enter a valid 6-digit PIN code." } });
-  if (result.status === "ready" || result.status === "stale") {
+  if (result.status === "ready" || result.status === "empty" || result.status === "stale") {
     const snapshot = await getRegionSnapshot(req.params.pincode);
-    return res.json({ ...result, dishes: snapshot?.dishes || [], restaurants: snapshot?.restaurants || [] });
+    return res.json({ ...result, warnings: snapshot?.warnings || [], dishes: snapshot?.dishes || [], restaurants: snapshot?.restaurants || [] });
   }
   // This endpoint reports state; an upstream scraper failure is part of the state, not a broken Kiku HTTP request.
   // Returning JSON 200 for `status: error` lets the client stop polling immediately without red browser-network errors.
@@ -275,6 +276,12 @@ app.post("/api/recommendations", async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// AI dish descriptions
+app.post("/api/dish-description", assistantLimiter, async (req, res, next) => { try {
+  const body = parseBody(dishDescriptionSchema, req.body);
+  res.json(await describeDish(body));
+} catch (error) { next(error); } });
+
 // Recipes
 app.get("/api/recipes", recipeLimiter, async (req, res, next) => { try { const q = typeof req.query.q === "string" ? req.query.q.slice(0, 120) : ""; res.json(await getRecipes(q)); } catch (error) { next(error); } });
 app.get("/api/recipes/:id", recipeLimiter, async (req, res, next) => { try { const recipe = await getRecipeById(req.params.id); if (!recipe) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Recipe not found." } }); res.json({ recipe }); } catch (error) { next(error); } });
@@ -316,8 +323,24 @@ app.post("/api/compare", compareLimiter, async (req, res, next) => {
     const sourceBody = { location: body.location || null, pincode: body.pincode || null, restaurant: body.restaurant, dish: body.dish || null };
     const key = comparisonKey(sourceBody);
     const cached = await getComparisonCache(key);
-    if (cached) return res.json(filterComparison(cached, body));
-    if (comparisonInflight.has(key)) return res.json(filterComparison(await comparisonInflight.get(key), body));
+    if (cached) {
+      res.setHeader("X-Kiku-Cache", "fresh");
+      return res.json(filterComparison(cached, body));
+    }
+    const staleCached = await getStaleComparisonCache(key);
+    if (comparisonInflight.has(key)) {
+      try {
+        const inflight = await comparisonInflight.get(key);
+        res.setHeader("X-Kiku-Cache", "fresh");
+        return res.json(filterComparison(inflight, body));
+      } catch (error) {
+        if (staleCached) {
+          res.setHeader("X-Kiku-Cache", "stale");
+          return res.json(filterComparison({ ...staleCached, warnings: [...new Set([...(staleCached.warnings || []), "Fresh provider data is temporarily unavailable. Showing the latest cached comparison."]) ] }, body));
+        }
+        throw error;
+      }
+    }
 
     const task = (async () => {
       const lockKey = `compare:${key}`;
@@ -339,12 +362,12 @@ app.post("/api/compare", compareLimiter, async (req, res, next) => {
         if (secondChance) return secondChance;
         return withComparisonSlot(async () => {
           const data = normalizeComparison(await compareViaScraper(sourceBody));
-          await setComparisonCache(key, data, config.comparisonCacheTtlMs);
+          await setComparisonCache(key, data, config.comparisonCacheTtlMs, config.comparisonCacheRetentionTtlMs);
           const requests = collection("comparisonRequests");
           if (requests) {
             await requests.updateOne(
               { key },
-              { $set: { key, body, lastSeenAt: new Date(), updatedAt: new Date(), expiresAt: new Date(Date.now() + config.comparisonCacheTtlMs) } },
+              { $set: { key, body, lastSeenAt: new Date(), updatedAt: new Date(), expiresAt: new Date(Date.now() + config.comparisonCacheRetentionTtlMs) } },
               { upsert: true },
             );
           }
@@ -359,7 +382,15 @@ app.post("/api/compare", compareLimiter, async (req, res, next) => {
     try {
       const data = await task;
       if (req.user) await recordActivity(String(req.user._id), { type: "compare", entityType: "dish", entityId: body.dish || body.restaurant, metadata: { restaurant: body.restaurant, pincode: body.pincode || null, offers: data.offers?.length || 0, dietary: body.dietary, allergies: body.allergies, allergenFreeOnly: body.allergenFreeOnly } });
+      res.setHeader("X-Kiku-Cache", "fresh");
       res.json(filterComparison(data, body));
+    } catch (error) {
+      if (staleCached) {
+        res.setHeader("X-Kiku-Cache", "stale");
+        const fallback = { ...staleCached, warnings: [...new Set([...(staleCached.warnings || []), "Fresh provider data is temporarily unavailable. Showing the latest cached comparison."]) ] };
+        return res.json(filterComparison(fallback, body));
+      }
+      throw error;
     } finally { comparisonInflight.delete(key); }
   } catch (error) { next(error); }
 });

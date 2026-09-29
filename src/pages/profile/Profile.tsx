@@ -4,19 +4,12 @@ import ProfileSavedPage from "./ProfileSaved";
 import ProfilePreferencesPage from "./ProfilePreferences";
 import ProfilePrivacyPage from "./ProfilePrivacy";
 import ProfileInfoPage from "./ProfileInfo";
-<<<<<<< HEAD
 import ProfileInsightsPage from "./ProfileInsights";
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import { getKikuProfile } from "../../stores/profile-store";
 import { AssistantIcon, PersonIcon, ThemeIcon } from "../../components/icons/ui-icons";
 
 function ProfileSettingIcon({ name }) {
-<<<<<<< HEAD
   const common = { viewBox: "0 0 24 24", fill: "none", "aria-hidden": true };
-=======
-  const common = { viewBox: "0 0 24 24", fill: "none", "aria-hidden": "true" };
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   if (name === "heart") return <svg {...common}><path d="M20.8 8.6c0 5.2-8.8 10.1-8.8 10.1S3.2 13.8 3.2 8.6A4.5 4.5 0 0 1 12 6.1a4.5 4.5 0 0 1 8.8 2.5Z" /></svg>;
   if (name === "food") return <svg {...common}><path d="M7 3v8M4.5 3v5.5a2.5 2.5 0 0 0 5 0V3M7 10.5V21M17 3v18M14.5 10.5H19c0-3.2-.9-5.8-2-7.5" /></svg>;
   if (name === "privacy") return <svg {...common}><path d="M12 3 20 6v5.3c0 5.1-3.2 8.4-8 9.7-4.8-1.3-8-4.6-8-9.7V6l8-3Z" /><path d="m9 12 2 2 4-4" /></svg>;
@@ -73,10 +66,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
     saved: "Saved dishes & recipes",
     preferences: "Food preferences",
     privacy: "Mood & Privacy",
-<<<<<<< HEAD
     insights: "Food insights",
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     about: "About Kiku",
     privacyInfo: "Privacy",
     support: "Support",
@@ -87,10 +77,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
     if (subroute === "saved") return <ProfileSavedPage onBack={() => go("home")} onOpenDish={onOpenDish} onOpenRecipe={onOpenRecipe} />;
     if (subroute === "preferences") return <ProfilePreferencesPage onBack={() => go("home")} />;
     if (subroute === "privacy") return <ProfilePrivacyPage onBack={() => go("home")} onDeleted={onDeleted} />;
-<<<<<<< HEAD
     if (subroute === "insights") return <ProfileInsightsPage onBack={() => go("home")} />;
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     if (subroute === "about") return <ProfileInfoPage type="about" onBack={() => go("home")} onOpenAssistant={onOpenAssistant} />;
     if (subroute === "privacyInfo") return <ProfileInfoPage type="privacy" onBack={() => go("home")} onOpenAssistant={onOpenAssistant} />;
     if (subroute === "support") return <ProfileInfoPage type="support" onBack={() => go("home")} onOpenAssistant={onOpenAssistant} />;
@@ -119,10 +106,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
                 <button type="button" className="is-current"><PersonIcon /><span>Profile</span></button>
                 <button type="button" onClick={() => go("preferences")}><span className="profile-nav-symbol">✦</span><span>Mood &amp; preferences</span></button>
                 <button type="button" onClick={() => go("saved")}><span className="profile-nav-symbol">♡</span><span>Saved dishes</span></button>
-<<<<<<< HEAD
                 <button type="button" onClick={() => go("insights")}><span className="profile-nav-symbol">✦</span><span>Food insights</span></button>
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <button type="button" onClick={() => setDarkMode((value) => !value)}><ThemeIcon dark={darkMode} /><span>Appearance</span></button>
                 <button type="button" onClick={onOpenAssistant}><AssistantIcon /><span>Ask Kiku</span></button>
               </div>
@@ -140,11 +124,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
 
               <section className="profile-card profile-identity-card">
                 <div className="profile-avatar">{profile.avatar ? <img src={profile.avatar} alt="Profile" /> : <PersonIcon />}</div>
-<<<<<<< HEAD
                 <div className="profile-identity-copy"><strong>{profile.name || "Kiku member"}</strong><span>Your Kiku profile and personal food journey, synced to your account.</span></div>
-=======
-                <div className="profile-identity-copy"><strong>{profile.name || "Kiku member"}</strong><span>Your local Kiku profile and personal food journey.</span></div>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <button type="button" className="profile-edit-button" onClick={() => go("edit")}>Edit</button>
               </section>
 
@@ -152,10 +132,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
                 <div className="profile-card-heading"><span className="profile-card-heading-icon"><span aria-hidden="true">⚙</span></span><div><strong>Preferences</strong><span>Shape the recommendations you see</span></div></div>
                 <button type="button" className="profile-setting-row" onClick={() => go("saved")}><span className="profile-setting-icon"><ProfileSettingIcon name="heart" /></span><span className="profile-setting-copy"><strong>Saved dishes &amp; recipes</strong><span>View everything you've liked and saved</span></span><span className="profile-setting-arrow">›</span></button>
                 <button type="button" className="profile-setting-row" onClick={() => go("preferences")}><span className="profile-setting-icon"><ProfileSettingIcon name="food" /></span><span className="profile-setting-copy"><strong>Food preferences</strong><span>Dietary choices and allergies</span></span><span className="profile-setting-arrow">›</span></button>
-<<<<<<< HEAD
                 <button type="button" className="profile-setting-row" onClick={() => go("insights")}><span className="profile-setting-icon">✦</span><span className="profile-setting-copy"><strong>Food insights</strong><span>See patterns from your Kiku activity</span></span><span className="profile-setting-arrow">›</span></button>
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <button type="button" className="profile-setting-row" onClick={() => go("privacy")}><span className="profile-setting-icon"><ProfileSettingIcon name="privacy" /></span><span className="profile-setting-copy"><strong>Mood &amp; privacy</strong><span>Local data and mood settings</span></span><span className="profile-setting-arrow">›</span></button>
               </section>
 
@@ -168,11 +145,7 @@ export default function ProfilePage({ isLoggedIn, darkMode, setDarkMode, onClose
               <section className="profile-card profile-settings-card profile-help-card">
                 <div className="profile-card-heading"><span className="profile-card-heading-icon">?</span><div><strong>Help &amp; about</strong><span>Learn about Kiku and get support</span></div></div>
                 <button type="button" className="profile-setting-row" onClick={() => go("about")}><span className="profile-setting-icon">ⓘ</span><span className="profile-setting-copy"><strong>About Kiku</strong><span>What Kiku does and how it works</span></span><span className="profile-setting-arrow">›</span></button>
-<<<<<<< HEAD
                 <button type="button" className="profile-setting-row" onClick={() => go("privacyInfo")}><span className="profile-setting-icon">◌</span><span className="profile-setting-copy"><strong>Privacy</strong><span>How your Kiku account data and privacy controls are handled</span></span><span className="profile-setting-arrow">›</span></button>
-=======
-                <button type="button" className="profile-setting-row" onClick={() => go("privacyInfo")}><span className="profile-setting-icon">◌</span><span className="profile-setting-copy"><strong>Privacy</strong><span>How your local Kiku data is handled</span></span><span className="profile-setting-arrow">›</span></button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <button type="button" className="profile-setting-row" onClick={() => go("support")}><span className="profile-setting-icon">?</span><span className="profile-setting-copy"><strong>Support</strong><span>Answers, guidance, and Ask Kiku</span></span><span className="profile-setting-arrow">›</span></button>
               </section>
 

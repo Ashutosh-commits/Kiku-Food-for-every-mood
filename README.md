@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 # Kiku
 
 ### Food for every mood.
 
 Kiku is a mood-aware food discovery and personalization platform. It combines explicit mood and craving input, optional on-device expression signals, personalized recommendations, restaurant/dish discovery, same-restaurant + same-dish price comparison, recipes, saved items, first-party activity, food insights, and a food-specific assistant.
 
-This repository contains the **Kiku web app and Kiku API**. The live Swiggy/Zomato comparison scraper is maintained as a separate Food-Price-Clash/Mise service and is accessed only by the server.
+This repository contains the **Kiku web app and Kiku API**, plus the live Swiggy/Zomato comparison scraper (Food-Price-Clash/Mise) in `./scraper`. Mise is a separate deployable service — its own container/process, own dependencies, own test suite — and is accessed only by the Kiku server, never by the browser directly.
 
 ## Production architecture
 
@@ -144,7 +143,7 @@ The recipe layer normalizes provider data and preserves the original source URL 
 POST   /api/compare
 ```
 
-The Kiku API validates provider URLs, applies rate limits, deduplicates identical in-flight requests, caches successful comparisons briefly, and isolates upstream failures behind a circuit breaker.
+The Kiku API validates provider URLs, applies rate limits, deduplicates identical in-flight requests, persists successful comparison results for 24 hours, schedules refresh only when a cached comparison is near expiry and still has recent demand, keeps a 7-day stale fallback, and isolates upstream failures behind a circuit breaker.
 
 ### Assistant
 
@@ -278,6 +277,7 @@ REDIS_URL=rediss://...
 REQUIRE_REDIS=true
 TRUSTED_ORIGINS=https://your-kiku-domain.example
 COMPARE_SERVICE_URL=https://your-private-comparison-service.example
+COMPARE_SERVICE_API_KEY=<strong-random-24+ character shared secret>
 PUBLIC_APP_URL=https://your-kiku-domain.example
 ```
 
@@ -310,39 +310,71 @@ Recipe enrichment is inference-only: when Cloudflare Workers AI is configured, K
 
 ## Local development
 
-### 1. Install dependencies
+The Mise comparison/regional scraper lives in `./scraper` (its own Dockerfile, Python
+dependencies, and test suite) and is a required dependency, not an optional add-on —
+without it running and reachable, Kiku has no live provider data to show and every
+comparison/regional request will come back empty.
+
+### Option A: Docker Compose (recommended — starts everything, including the scraper)
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
+This builds and runs `mongo`, `redis`, `scraper` (Mise, on its internal port 8000),
+`kiku-api`, and `kiku-worker` together on one Docker network. `kiku-api`/`kiku-worker`
+reach the scraper at `http://scraper:8000` and `kiku-api` will not report healthy until
+the scraper does. The shared `SCRAPER_API_KEY`/`COMPARE_SERVICE_API_KEY` secret defaults
+to `local-kiku-scraper-secret` for dev; override it by setting `COMPARE_SERVICE_API_KEY`
+in your shell before running compose.
+
+Then start the frontend separately:
+
+```bash
+npm install
+npm run dev
+```
+
+### Option B: Run each piece by hand (no Docker)
+
+#### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Start MongoDB + Redis
-
-Use local services or the included development compose file:
+#### 2. Start MongoDB + Redis
 
 ```bash
 docker compose -f docker-compose.dev.yml up -d mongo redis
 ```
 
-### 3. Start the comparison service
-
-Use the separate fixed Food-Price-Clash/Mise project:
+#### 3. Start the comparison/scraper service (Mise, in `./scraper`)
 
 ```bash
-uvicorn app.main:app --reload
+cd scraper
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m playwright install chromium                # skip if using PLAYWRIGHT_BROWSER_CHANNEL=chrome
+cp .env.example .env   # already present here with SCRAPER_API_KEY=local-kiku-scraper-secret
+uvicorn app.main:app --host 0.0.0.0 --port 8001
 ```
 
-Make sure `COMPARE_SERVICE_URL` points to that service.
+`scraper/app/config.py` loads `scraper/.env` automatically for this standalone path. Keep
+`SCRAPER_API_KEY` here identical to `COMPARE_SERVICE_API_KEY` in the root `.env`, and keep
+`COMPARE_SERVICE_URL=http://127.0.0.1:8001` in the root `.env` to match. For a deployed
+scraper, use its HTTPS URL instead.
 
-### 4. Start the Kiku API
+#### 4. Start the Kiku API
 
-Set the variables from `server/.env.example` in your shell/environment and run:
+`server/config.js` loads the root `.env` automatically for this path, so set any
+overrides from `server/.env.example` there (or export them in your shell) and run:
 
 ```bash
 npm run server
 ```
 
-### 5. Start the frontend
+#### 5. Start the frontend
 
 In another terminal:
 
@@ -351,6 +383,19 @@ npm run dev
 ```
 
 Vite proxies `/api/*` to the Kiku API during development.
+
+### Confirming the scraper is actually connected
+
+```bash
+curl http://localhost:8001/healthz        # Mise itself
+curl http://localhost:4000/api/region/status?pincode=282001   # via Kiku, once both are up
+```
+
+If Kiku's comparison/regional endpoints return empty results or a `COMPARE_CIRCUIT_OPEN`/
+`REGION_UPSTREAM` error, it means Kiku could not reach the scraper — check that the
+scraper container/process is healthy and that `COMPARE_SERVICE_URL` and
+`COMPARE_SERVICE_API_KEY` match on both sides. Kiku is intentionally fail-closed here: it
+will never invent or cache fake provider data when the scraper is unreachable.
 
 ## Production-style run
 
@@ -506,25 +551,14 @@ For the pincode-first live discovery architecture, see:
 - `REGIONAL_DISCOVERY_DEPLOYMENT.md` — deployment and free-tier setup.
 - `REGIONAL_SCRAPER_CONTRACT.md` — required live scraper API contract.
 
-The live regional path starts from `POST /api/region/refresh` and is isolated by pincode. GitHub Actions should be used for background refresh/maintenance, not as the latency-sensitive live scraper trigger.
-=======
-# Kiku Frontend
+The live regional path starts from `POST /api/region/refresh` and is isolated by pincode. Verified regional snapshots are persisted in MongoDB for 24 hours, with Redis as the hot cache and up to 7 days of stale retention for provider-outage fallback. GitHub Actions should be used for background refresh/maintenance, not as the latency-sensitive live scraper trigger.
 
-Kiku is a Vite + React + TypeScript frontend.
+## Provider data sources
 
-## Structure
+The current live regional Swiggy path uses `shahidirfan~swiggy-restaurant-scraper`; see `APIFY_INTEGRATION.md` for the one-run-per-PIN cache strategy.
 
-- `src/components/` reusable UI components
-- `src/pages/` page-level screens grouped by domain
-- `src/data/` static data and feature helpers
-- `src/stores/` local application state/persistence
-- `src/types/` shared TypeScript contracts
-- `src/utils/` small cross-feature utilities
-- `src/App.tsx` application composition and page state
+See `DATA_PROVIDER_SETUP.md` for Real Data API configuration and the zero-payment fallback strategy.
 
-## Scripts
+## Free provider fallback
 
-- `npm run dev` starts Vite development mode
-- `npm run build` creates a production build
-- `npm run preview` previews the production build
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+See `FREE_MODE_APIFY.md` for the $0 Apify Free-plan fallback and its exact-PIN safety constraints.

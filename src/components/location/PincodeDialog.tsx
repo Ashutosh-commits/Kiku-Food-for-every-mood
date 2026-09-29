@@ -42,13 +42,8 @@ export default function PincodeDialog({ open, currentPincode, forced = false, on
           <button type="submit" className="kiku-pincode-primary">Save PIN</button>
         </form>
         <div className="kiku-pincode-privacy">
-<<<<<<< HEAD
           <strong>How Kiku uses your PIN</strong>
           <span>Your PIN is used only as a discovery hint for food-price lookups. When you are signed in it is stored with your Kiku preferences; guests keep a browser copy for convenience.</span>
-=======
-          <strong>Your data stays local.</strong>
-          <span>Your PIN is not your exact location. Kiku keeps it stored locally in this browser and does not share it with anyone.</span>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         </div>
         <button type="button" className="kiku-pincode-skip" onClick={skip}>Not now — keep exploring</button>
       </div>

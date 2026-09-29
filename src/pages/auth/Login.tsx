@@ -1,17 +1,12 @@
 import { useState } from "react";
-<<<<<<< HEAD
 import { api } from "../../services/api";
 import { hydrateKikuUserState } from "../../stores/profile-store";
-=======
-import { getKikuProfile, saveKikuProfile } from "../../stores/profile-store";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import { AuthLayout, GoogleButton, AuthIcon } from "../../components/auth/AuthShared";
 
 export default function LoginPage({ darkMode, setDarkMode, onSuccess, onSignup, onSkip }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-<<<<<<< HEAD
   const [busy, setBusy] = useState(false);
 
   const complete = async (user) => {
@@ -37,29 +32,6 @@ export default function LoginPage({ darkMode, setDarkMode, onSuccess, onSignup, 
     try { const result = await api.google(credential); await complete(result.user); }
     catch (nextError) { setError(nextError.message || "Google sign-in failed."); }
     finally { setBusy(false); }
-=======
-
-  const complete = (profile) => {
-    const current = getKikuProfile();
-    saveKikuProfile({
-      ...current,
-      ...profile,
-      name: profile.name || current.name || "Kiku member",
-    });
-    localStorage.setItem("kiku-authenticated", "true");
-    window.dispatchEvent(new CustomEvent("kiku-auth-change", { detail: { authenticated: true } }));
-    onSuccess?.();
-  };
-
-  const submit = (event) => {
-    event.preventDefault();
-    setError("");
-    if (!email.trim() || !password) {
-      setError("Enter your email and password to continue.");
-      return;
-    }
-    complete({ email: email.trim() });
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   return (
@@ -68,18 +40,13 @@ export default function LoginPage({ darkMode, setDarkMode, onSuccess, onSignup, 
       setDarkMode={setDarkMode}
       eyebrow="WELCOME BACK"
       title="Come back to what feels good."
-<<<<<<< HEAD
       subtitle="Sign in to keep your saved dishes, preferences, recipes, and Kiku experience together across your devices."
-=======
-      subtitle="Sign in to keep your saved dishes, preferences, recipes, and Kiku experience together on this device."
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       alternate={<><span>New here?</span> <button type="button" onClick={onSignup}>Create your Kiku space</button></>}
       footerCopy="Skip sign-in whenever you like — Kiku can still help you explore."
       onSkip={onSkip}
     >
       <div className="kiku-auth-card-heading"><span className="kiku-auth-icon"><AuthIcon type="lock" /></span><div><strong>Sign in</strong><span>Pick up where you left off.</span></div></div>
       <form className="kiku-auth-form" onSubmit={submit}>
-<<<<<<< HEAD
         <label>Email<input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required /></label>
         <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required /></label>
         <div className="kiku-auth-inline-row"><button type="button" className="kiku-auth-inline-link" onClick={forgot}>Forgot password?</button></div>
@@ -91,16 +58,3 @@ export default function LoginPage({ darkMode, setDarkMode, onSuccess, onSignup, 
     </AuthLayout>
   );
 }
-=======
-        <label>Email<input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" /></label>
-        <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" /></label>
-        {error && <p className="kiku-auth-error" role="alert">{error}</p>}
-        <button className="kiku-auth-primary" type="submit">Sign in</button>
-      </form>
-      <div className="kiku-auth-divider"><span>or</span></div>
-      <GoogleButton onSuccess={complete} onError={setError} />
-    </AuthLayout>
-  );
-}
-
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc

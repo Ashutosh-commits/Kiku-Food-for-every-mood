@@ -20,3 +20,10 @@ test("assistant recipe result data keeps the provider URL available", () => {
   assert.match(recipes, /url: details\.sourceUrl/);
   assert.match(recipes, /sourceUrl: safeSourceUrl/);
 });
+
+
+test("assistant dish cards use restaurant/menu listing URLs, not fabricated item URLs", () => {
+  const app = fs.readFileSync(path.join(root, "src", "App.tsx"), "utf8");
+  assert.match(app, /item\?\.restaurantUrl, item\?\.restaurant_url/);
+  assert.match(app, /View restaurant menu/);
+});

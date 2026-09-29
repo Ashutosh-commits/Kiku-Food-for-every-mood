@@ -19,6 +19,63 @@ services:
       timeout: 5s
       retries: 10
 
+  scraper:
+    build:
+      context: ./scraper
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:8000/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      APP_ENV: development
+      HOST: 0.0.0.0
+      PORT: "8000"
+      SCRAPER_API_KEY: ${COMPARE_SERVICE_API_KEY:-local-kiku-scraper-secret}
+      REALDATA_API_KEY: ${REALDATA_API_KEY:-}
+      REALDATA_API_BASE_URL: ${REALDATA_API_BASE_URL:-https://api.realdataapi.com}
+      REALDATA_API_TIMEOUT_SECONDS: ${REALDATA_API_TIMEOUT_SECONDS:-30}
+      REALDATA_SWIGGY_SEARCH_PATH: ${REALDATA_SWIGGY_SEARCH_PATH:-/v1/swiggy/search}
+      REALDATA_SWIGGY_MENU_PATH: ${REALDATA_SWIGGY_MENU_PATH:-/v1/swiggy/menu}
+      REALDATA_ZOMATO_SEARCH_PATH: ${REALDATA_ZOMATO_SEARCH_PATH:-/v1/zomato/search}
+      REALDATA_ZOMATO_MENU_PATH: ${REALDATA_ZOMATO_MENU_PATH:-/v1/zomato/menu}
+      REALDATA_QUERY_PARAM: ${REALDATA_QUERY_PARAM:-query}
+      REALDATA_LOCATION_PARAM: ${REALDATA_LOCATION_PARAM:-city}
+      REALDATA_URL_PARAM: ${REALDATA_URL_PARAM:-url}
+      APIFY_API_BASE_URL: ${APIFY_API_BASE_URL:-https://api.apify.com}
+      APIFY_TIMEOUT_SECONDS: ${APIFY_TIMEOUT_SECONDS:-90}
+      APIFY_RUN_TIMEOUT_SECONDS: ${APIFY_RUN_TIMEOUT_SECONDS:-90}
+      APIFY_STATUS_WAIT_SECONDS: ${APIFY_STATUS_WAIT_SECONDS:-10}
+      APIFY_RESPONSE_MAX_BYTES: ${APIFY_RESPONSE_MAX_BYTES:-8388608}
+      APIFY_SWIGGY_ENABLED: ${APIFY_SWIGGY_ENABLED:-true}
+      APIFY_SWIGGY_TOKEN: ${APIFY_SWIGGY_TOKEN:-}
+      APIFY_ZOMATO_ENABLED: ${APIFY_ZOMATO_ENABLED:-false}
+      APIFY_ZOMATO_TOKEN: ${APIFY_ZOMATO_TOKEN:-}
+      APIFY_SWIGGY_ACTOR: ${APIFY_SWIGGY_ACTOR:-shahidirfan~swiggy-restaurant-scraper}
+      APIFY_ZOMATO_ACTOR: ${APIFY_ZOMATO_ACTOR:-thirdwatch~zomato-scraper}
+      APIFY_SWIGGY_MAX_RESULTS: ${APIFY_SWIGGY_MAX_RESULTS:-5}
+      APIFY_SWIGGY_REGION_KEYWORD: ${APIFY_SWIGGY_REGION_KEYWORD:-}
+      APIFY_SWIGGY_REGION_MAX_PAGES: ${APIFY_SWIGGY_REGION_MAX_PAGES:-1}
+      APIFY_SWIGGY_MENU_ACTOR: ${APIFY_SWIGGY_MENU_ACTOR:-smacient~swiggy-restaurant-menu-extractor}
+      APIFY_SWIGGY_MENU_MAX_RESTAURANTS: ${APIFY_SWIGGY_MENU_MAX_RESTAURANTS:-5}
+      APIFY_SWIGGY_MENU_RUN_TIMEOUT_SECONDS: ${APIFY_SWIGGY_MENU_RUN_TIMEOUT_SECONDS:-360}
+      APIFY_ZOMATO_MAX_RESULTS: ${APIFY_ZOMATO_MAX_RESULTS:-5}
+      APIFY_MAX_CONCURRENT_RUNS: ${APIFY_MAX_CONCURRENT_RUNS:-1}
+      APIFY_ERROR_COOLDOWN_SECONDS: ${APIFY_ERROR_COOLDOWN_SECONDS:-300}
+      APIFY_FALLBACK_REALDATA: ${APIFY_FALLBACK_REALDATA:-false}
+      PIN_RESOLVER_POSTAL_BASE_URL: ${PIN_RESOLVER_POSTAL_BASE_URL:-https://api.postalpincode.in}
+      PIN_RESOLVER_GEOCODE_BASE_URL: ${PIN_RESOLVER_GEOCODE_BASE_URL:-https://nominatim.openstreetmap.org}
+      PIN_RESOLVER_TIMEOUT_SECONDS: ${PIN_RESOLVER_TIMEOUT_SECONDS:-10}
+      PIN_RESOLVER_RESPONSE_MAX_BYTES: ${PIN_RESOLVER_RESPONSE_MAX_BYTES:-1048576}
+      PIN_RESOLVER_CACHE_TTL_SECONDS: ${PIN_RESOLVER_CACHE_TTL_SECONDS:-2592000}
+      PIN_RESOLVER_CACHE_MAX_ITEMS: ${PIN_RESOLVER_CACHE_MAX_ITEMS:-1024}
+      PIN_RESOLVER_MIN_GEOCODE_INTERVAL_SECONDS: ${PIN_RESOLVER_MIN_GEOCODE_INTERVAL_SECONDS:-1.1}
+      PIN_RESOLVER_USER_AGENT: ${PIN_RESOLVER_USER_AGENT:-Kiku/1.0 (local food discovery app)}
+      PIN_RESOLVER_REFERER: ${PIN_RESOLVER_REFERER:-http://localhost:5173/}
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173,http://localhost:4000
+
   kiku-api:
     env_file:
     - .env
@@ -31,6 +88,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      scraper:
+        condition: service_healthy
     ports:
       - "127.0.0.1:4000:4000"
     healthcheck:
@@ -38,26 +97,31 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
       NODE_ENV: development
       PORT: 4000
       HOST: 0.0.0.0
       MONGODB_URI: mongodb://mongo:27017
       MONGODB_DB_NAME: kiku
+      MONGO_CONNECT_RETRIES: ${MONGO_CONNECT_RETRIES:-15}
+      MONGO_CONNECT_RETRY_DELAY_MS: ${MONGO_CONNECT_RETRY_DELAY_MS:-2000}
+      MONGO_SERVER_SELECTION_TIMEOUT_MS: ${MONGO_SERVER_SELECTION_TIMEOUT_MS:-5000}
       ALLOW_IN_MEMORY: "false"
       SESSION_SECRET: change-me-to-a-random-32-plus-character-secret
-      COMPARE_SERVICE_URL: http://host.docker.internal:8000
+      COMPARE_SERVICE_URL: http://scraper:8000
+      COMPARE_SERVICE_API_KEY: ${COMPARE_SERVICE_API_KEY:-local-kiku-scraper-secret}
       REDIS_URL: redis://redis:6379
       REQUIRE_REDIS: "true"
-      TRUSTED_ORIGINS: http://localhost:4000,http://localhost:5173
+      TRUSTED_ORIGINS: http://localhost:4000,http://127.0.0.1:4000,http://localhost:5173,http://127.0.0.1:5173
       AUTOMATION_ENABLED: "true"
       REQUIRE_AUTOMATION: "false"
       AUTOMATION_HEARTBEAT_TTL_MS: "90000"
       AUTOMATION_ACTIVE_USER_DAYS: "30"
       AUTOMATION_USER_BATCH_SIZE: "500"
-      COMPARISON_CACHE_TTL_MS: "60000"
+      COMPARISON_CACHE_TTL_MS: "86400000"
+      COMPARISON_CACHE_RETENTION_TTL_MS: "604800000"
+      REGION_FRESH_TTL_MS: "86400000"
+      REGION_RETENTION_TTL_MS: "604800000"
       COMPARISON_REFRESH_LEAD_MS: "10000"
       COMPARISON_KEEP_WARM_HOURS: "6"
       PROVIDER_HEALTH_EVERY_MS: "10800000"
@@ -77,15 +141,19 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      scraper:
+        condition: service_healthy
     environment:
       NODE_ENV: development
       MONGODB_URI: mongodb://mongo:27017
       MONGODB_DB_NAME: kiku
+      MONGO_CONNECT_RETRIES: ${MONGO_CONNECT_RETRIES:-15}
+      MONGO_CONNECT_RETRY_DELAY_MS: ${MONGO_CONNECT_RETRY_DELAY_MS:-2000}
+      MONGO_SERVER_SELECTION_TIMEOUT_MS: ${MONGO_SERVER_SELECTION_TIMEOUT_MS:-5000}
       ALLOW_IN_MEMORY: "false"
       SESSION_SECRET: change-me-to-a-random-32-plus-character-secret
-      COMPARE_SERVICE_URL: http://host.docker.internal:8000
+      COMPARE_SERVICE_URL: http://scraper:8000
+      COMPARE_SERVICE_API_KEY: ${COMPARE_SERVICE_API_KEY:-local-kiku-scraper-secret}
       REDIS_URL: redis://redis:6379
       REDIS_PREFIX: kiku
       REQUIRE_REDIS: "true"
@@ -94,7 +162,10 @@ services:
       AUTOMATION_HEARTBEAT_TTL_MS: "90000"
       AUTOMATION_ACTIVE_USER_DAYS: "30"
       AUTOMATION_USER_BATCH_SIZE: "500"
-      COMPARISON_CACHE_TTL_MS: "60000"
+      COMPARISON_CACHE_TTL_MS: "86400000"
+      COMPARISON_CACHE_RETENTION_TTL_MS: "604800000"
+      REGION_FRESH_TTL_MS: "86400000"
+      REGION_RETENTION_TTL_MS: "604800000"
       COMPARISON_REFRESH_LEAD_MS: "10000"
       COMPARISON_KEEP_WARM_HOURS: "6"
       PROVIDER_HEALTH_EVERY_MS: "10800000"

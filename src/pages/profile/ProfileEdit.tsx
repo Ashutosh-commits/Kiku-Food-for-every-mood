@@ -61,11 +61,7 @@ export default function ProfileEditPage({ darkMode, onBack }) {
 
         <div className="profile-edit-note">
           <span className="profile-note-icon">✦</span>
-<<<<<<< HEAD
           <p>Your profile details are stored securely with your Kiku account.</p>
-=======
-          <p>Your name and profile photo are stored locally on this device.</p>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         </div>
         {error && <p className="kiku-form-error">{error}</p>}
 

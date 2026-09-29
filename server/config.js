@@ -1,10 +1,47 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Local/non-Docker dev (`npm run server`, `npm run worker`) has no process manager to inject
+// environment variables, so without this the root `.env` file is silently ignored and every
+// service (Mongo, Redis, and crucially the Mise scraper) falls back to config.js defaults.
+// This loads `.env` into process.env, without overriding anything already set by the real
+// shell/Docker/host environment, so Docker Compose's explicit `environment:` blocks still win.
+function loadDotEnv() {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const envPath = path.join(__dirname, "..", ".env");
+  if (!existsSync(envPath)) return;
+  let raw;
+  try {
+    raw = readFileSync(envPath, "utf8");
+  } catch {
+    return;
+  }
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    if (!key || key in process.env) continue;
+    let value = trimmed.slice(eq + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    process.env[key] = value;
+  }
+}
+
+loadDotEnv();
+
 export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   port: Number(process.env.PORT || 4000),
   host: process.env.HOST || "0.0.0.0",
   mongoUri: process.env.MONGODB_URI || "",
   mongoDbName: process.env.MONGODB_DB_NAME || "kiku",
-  compareServiceUrl: process.env.COMPARE_SERVICE_URL || "http://127.0.0.1:8000",
+  compareServiceUrl: process.env.COMPARE_SERVICE_URL || "http://127.0.0.1:8001",
+  compareServiceApiKey: process.env.COMPARE_SERVICE_API_KEY || "",
   compareTimeoutMs: Number(process.env.COMPARE_TIMEOUT_MS || 20000),
   recipeProviderUrl: process.env.RECIPE_PROVIDER_URL || "https://www.themealdb.com/api/json/v1/1",
   sessionSecret: process.env.SESSION_SECRET || "",
@@ -31,13 +68,15 @@ export const config = {
   automationLockDurationMs: Number(process.env.AUTOMATION_LOCK_DURATION_MS || 60000),
   automationActiveUserDays: Number(process.env.AUTOMATION_ACTIVE_USER_DAYS || 30),
   automationUserBatchSize: Number(process.env.AUTOMATION_USER_BATCH_SIZE || 500),
-  comparisonCacheTtlMs: Number(process.env.COMPARISON_CACHE_TTL_MS || 60000),
+  comparisonCacheTtlMs: Number(process.env.COMPARISON_CACHE_TTL_MS || 24 * 60 * 60 * 1000),
+  comparisonCacheRetentionTtlMs: Number(process.env.COMPARISON_CACHE_RETENTION_TTL_MS || 7 * 24 * 60 * 60 * 1000),
   comparisonRefreshLeadMs: Number(process.env.COMPARISON_REFRESH_LEAD_MS || 10000),
   comparisonDemandWindowMs: Number(process.env.COMPARISON_DEMAND_WINDOW_MS || 30 * 60 * 1000),
   comparisonRequestRetentionDays: Number(process.env.COMPARISON_REQUEST_RETENTION_DAYS || 7),
-  regionFreshTtlMs: Number(process.env.REGION_FRESH_TTL_MS || 15 * 60 * 1000),
-  regionRetentionTtlMs: Number(process.env.REGION_RETENTION_TTL_MS || 24 * 60 * 60 * 1000),
+  regionFreshTtlMs: Number(process.env.REGION_FRESH_TTL_MS || 24 * 60 * 60 * 1000),
+  regionRetentionTtlMs: Number(process.env.REGION_RETENTION_TTL_MS || 7 * 24 * 60 * 60 * 1000),
   regionErrorTtlMs: Number(process.env.REGION_ERROR_TTL_MS || 60 * 1000),
+  regionEmptyTtlMs: Number(process.env.REGION_EMPTY_TTL_MS || 30 * 1000),
   regionScrapeTimeoutMs: Number(process.env.REGION_SCRAPE_TIMEOUT_MS || 45 * 1000),
   regionResponseMaxBytes: Number(process.env.REGION_RESPONSE_MAX_BYTES || 8 * 1024 * 1024),
   regionScrapeConcurrency: Number(process.env.REGION_SCRAPE_CONCURRENCY || 10),
@@ -61,6 +100,7 @@ export function assertProductionConfig() {
   if (!config.sessionSecret || config.sessionSecret.length < 32) missing.push("SESSION_SECRET (32+ chars)");
   if (!config.trustedOrigins.length) missing.push("TRUSTED_ORIGINS");
   if (!config.compareServiceUrl) missing.push("COMPARE_SERVICE_URL");
+  if (!config.compareServiceApiKey || config.compareServiceApiKey.length < 24) missing.push("COMPARE_SERVICE_API_KEY (24+ chars)");
   if (config.requireRedis && !config.redisUrl) missing.push("REDIS_URL");
   if (config.requireAutomation && !config.automationEnabled) missing.push("AUTOMATION_ENABLED=true");
   if (config.requireAutomation && !config.redisUrl) missing.push("REDIS_URL (automation workers)");

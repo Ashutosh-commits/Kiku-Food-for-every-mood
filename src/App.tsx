@@ -1,46 +1,27 @@
-<<<<<<< HEAD
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-=======
-import { useEffect, useMemo, useRef, useState } from "react";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import "./index.css";
 import ProfilePage from "./pages/profile/Profile";
 import LoginPage from "./pages/auth/Login";
 import SignupPage from "./pages/auth/Signup";
-<<<<<<< HEAD
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import ResetPasswordPage from "./pages/auth/ResetPassword";
 import VerifyEmailPage from "./pages/auth/VerifyEmail";
 import PincodeDialog from "./components/location/PincodeDialog";
 import PublicInfoPage from "./pages/PublicInfoPage";
 import { getKikuPincode, hasDismissedKikuPincodePrompt, dismissKikuPincodePrompt, hydrateKikuPincode, clearKikuPincode } from "./stores/location-store";
-=======
-import PincodeDialog from "./components/location/PincodeDialog";
-import { getKikuPincode, hasDismissedKikuPincodePrompt, dismissKikuPincodePrompt } from "./stores/location-store";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import {
   getKikuPreferences,
   getKikuSavedItems,
   toggleKikuSavedDish,
   toggleKikuSavedRecipe,
-<<<<<<< HEAD
   toggleKikuSavedRestaurant,
   scoreKikuDish,
   hydrateKikuUserState,
 } from "./stores/profile-store";
 
-import { moods, moodQuotes } from "./data/moods";
+import { moods, moodQuotes, moodRecipeKeywords } from "./data/moods";
 import { cravingOptions, budgetOptions } from "./data/filters";
 import { inferStepIngredients, normalizeRecipe, normalizeRecipeDetails, parseServingCount, scaleIngredientAmount } from "./data/recipes";
-=======
-  scoreKikuDish,
-} from "./stores/profile-store";
-
-import { moods, discoveryDishes, recommendationSets, moodQuotes } from "./data/dishes";
-import { cravingOptions, prepTimeOptions, budgetOptions } from "./data/filters";
-import { recipeApiUrl, fallbackRecipes, normalizeRecipe, getRecipeForDish } from "./data/recipes";
-import { shuffleArray } from "./data/helpers";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import {
   warmUpMoodModel,
   readFaceSignalsFromVideo,
@@ -48,13 +29,7 @@ import {
   predictMoodFromBlendshapes,
   type FaceSignals,
 } from "./data/mood-model";
-<<<<<<< HEAD
-import { fetchLiveComparison, type LiveComparisonResult } from "./data/priceCompare";
 import { api } from "./services/api";
-=======
-import { warmUpShadowModel, getShadowPrediction } from "./data/shadow-model";
-import { logMoodComparison } from "./data/telemetry";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 import { workflowStages } from "./data/workflow";
 import {
   ThemeIcon,
@@ -67,12 +42,8 @@ import {
   CameraOffIcon,
 } from "./components/icons/ui-icons";
 import type { Dish } from "./types";
-<<<<<<< HEAD
 import { detectPotentialAllergensFromIngredients, matchesDietaryFilter, normalizeDietaryEvidence } from "../shared/dietary.js";
 import { scrollToSection, getStandaloneRoute, getPublicInfoRoute, type PublicInfoRoute } from "./utils/navigation";
-=======
-import { scrollToSection, getStandaloneRoute } from "./utils/navigation";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
 const navItems = [
   { label: "Home", target: "home", activeKey: "home" },
@@ -90,7 +61,20 @@ const mobileNavItems = [
   { label: "Profile", target: "home", Icon: PersonIcon, activeKey: "profile" },
 ];
 
-<<<<<<< HEAD
+const capitalizeWord = (value) => {
+  const text = String(value || "");
+  return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : text;
+};
+
+const recipeMatchesMood = (recipe, mood) => {
+  const keywords = moodRecipeKeywords[mood];
+  if (!keywords || !keywords.length) return false;
+  const haystack = [recipe?.title, recipe?.description, recipe?.cuisine, ...(recipe?.tags || [])]
+    .join(" ")
+    .toLowerCase();
+  return keywords.some((keyword) => haystack.includes(keyword));
+};
+
 const getAuthReturn = () => {
   try { return sessionStorage.getItem("kiku-auth-return") || "home"; } catch { return "home"; }
 };
@@ -101,35 +85,20 @@ const clearAuthReturn = () => {
   try { sessionStorage.removeItem("kiku-auth-return"); } catch {}
 };
 
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window === "undefined") return false;
-<<<<<<< HEAD
     try { return localStorage.getItem("kiku-theme") === "dark"; } catch { return false; }
   });
   const [activeSection, setActiveSection] = useState("home");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authReady, setAuthReady] = useState(false);
-=======
-    return localStorage.getItem("kiku-theme") === "dark";
-  });
-  const [activeSection, setActiveSection] = useState("home");
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("kiku-authenticated") === "true";
-  });
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const [profileRoute, setProfileRoute] = useState(() => (
     typeof window !== "undefined" && (window.location.hash === "#profile" || window.location.hash.startsWith("#profile/"))
   ));
   const [authRoute, setAuthRoute] = useState(() => getStandaloneRoute());
-<<<<<<< HEAD
   const [publicInfoRoute, setPublicInfoRoute] = useState<PublicInfoRoute>(() => getPublicInfoRoute());
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   useEffect(() => {
     const syncAuthRoute = () => setAuthRoute(getStandaloneRoute());
@@ -140,7 +109,6 @@ export default function App() {
       window.removeEventListener("hashchange", syncAuthRoute);
     };
   }, []);
-<<<<<<< HEAD
 
   useEffect(() => {
     const syncPublicInfoRoute = () => setPublicInfoRoute(getPublicInfoRoute());
@@ -153,17 +121,15 @@ export default function App() {
     };
   }, []);
   const [pincode, setPincode] = useState(() => getKikuPincode());
-  const [regionStatus, setRegionStatus] = useState<"idle" | "scraping" | "queued" | "ready" | "stale" | "error">("idle");
+  const [regionStatus, setRegionStatus] = useState<"idle" | "scraping" | "queued" | "ready" | "empty" | "stale" | "error">("idle");
+  const regionRefreshStartedRef = useRef("");
   const [regionStatusError, setRegionStatusError] = useState("");
   const [regionDataVersion, setRegionDataVersion] = useState(0);
-=======
-  const [pincode, setPincode] = useState(() => getKikuPincode());
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+  const [regionalRestaurants, setRegionalRestaurants] = useState([]);
   const [pincodeOpen, setPincodeOpen] = useState(false);
   const [pincodePromptSeen, setPincodePromptSeen] = useState(() => hasDismissedKikuPincodePrompt());
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [assistantQuery, setAssistantQuery] = useState("");
-<<<<<<< HEAD
   const [assistantMessages, setAssistantMessages] = useState([]);
   const [assistantBusy, setAssistantBusy] = useState(false);
   const [assistantConversationId, setAssistantConversationId] = useState(null);
@@ -179,20 +145,15 @@ export default function App() {
   const [serverRecommendations, setServerRecommendations] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [activeDish, setActiveDish] = useState(null);
-  const [liveComparison, setLiveComparison] = useState<LiveComparisonResult | null>(null);
-  const [comparisonStatus, setComparisonStatus] = useState<"idle" | "loading" | "live" | "fallback">("idle");
-  const comparisonRequestId = useRef(0);
-=======
-  const [shuffleSeed, setShuffleSeed] = useState(0);
-  const [carouselScrollLeft, setCarouselScrollLeft] = useState(0);
-  const [carouselCanScrollRight, setCarouselCanScrollRight] = useState(true);
-  const [activeDish, setActiveDish] = useState(null);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+  const [activeDishDescription, setActiveDishDescription] = useState("");
+  const [activeDishDescriptionLoading, setActiveDishDescriptionLoading] = useState(false);
+  const [activeDishDescriptionSource, setActiveDishDescriptionSource] = useState(null);
+  const [orderLinkOpening, setOrderLinkOpening] = useState(false);
+  const dishDescriptionCacheRef = useRef(new Map());
   const [activeRestaurant, setActiveRestaurant] = useState(null);
   const [dishHistory, setDishHistory] = useState([]);
   const [dishReturnRestaurant, setDishReturnRestaurant] = useState(null);
   const [vegOnly, setVegOnly] = useState(false);
-<<<<<<< HEAD
   const [allergenSafeOnly, setAllergenSafeOnly] = useState(false);
   const [restaurantSearch, setRestaurantSearch] = useState("");
   const [discoverFilter, setDiscoverFilter] = useState("All");
@@ -200,26 +161,16 @@ export default function App() {
 
   const [likedDishes, setLikedDishes] = useState(() => new Set(getKikuSavedItems().dishes.map((item) => item.name)));
   const [likedRestaurants, setLikedRestaurants] = useState(() => new Set(getKikuSavedItems().restaurants.map((item) => item.name)));
-=======
-  const [restaurantSearch, setRestaurantSearch] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");  const [workflowStep, setWorkflowStep] = useState(0);
-
-  const [likedDishes, setLikedDishes] = useState(() => new Set(getKikuSavedItems().dishes.map((item) => item.name)));
-  const [likedRestaurants, setLikedRestaurants] = useState(() => new Set());
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const [similarScrollLeft, setSimilarScrollLeft] = useState(0);
   const [similarCanScrollRight, setSimilarCanScrollRight] = useState(false);
   const [moodStage, setMoodStage] = useState("scan"); // "scan" | "result"
   const [scanStatus, setScanStatus] = useState("idle"); // idle | requesting | scanning | denied
   const [detectedMood, setDetectedMood] = useState(null); // { mood, confidence } — set at runtime only
   const [craving, setCraving] = useState(null);
-<<<<<<< HEAD
-=======
-  const [prepTime, setPrepTime] = useState(null);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const [budget, setBudget] = useState(null);
   const [recipes, setRecipes] = useState([]);
   const [recipeQuery, setRecipeQuery] = useState("");
+  const [recipeCuisineFilter, setRecipeCuisineFilter] = useState("all"); // "all" | "indian"
   const [recipesLoading, setRecipesLoading] = useState(true);
   const [recipesError, setRecipesError] = useState("");
   const [activeRecipe, setActiveRecipe] = useState(null);
@@ -228,11 +179,7 @@ export default function App() {
   const [timerRemaining, setTimerRemaining] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [stepCompletePopup, setStepCompletePopup] = useState(false);
-<<<<<<< HEAD
   const [recipeServingCount, setRecipeServingCount] = useState(0);
-=======
-  const [ingredientQuantities, setIngredientQuantities] = useState({});
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const [recipeTab, setRecipeTab] = useState("Ingredients");
   const [savedRecipes, setSavedRecipes] = useState(() => new Set(getKikuSavedItems().recipes.map((item) => item.name)));
   const [preferenceVersion, setPreferenceVersion] = useState(0);
@@ -243,18 +190,13 @@ export default function App() {
   const recipesRef = useRef(null);
   const dishSearchInputRef = useRef(null);
   const carouselRef = useRef(null);
-<<<<<<< HEAD
   const similarRailRef = useRef(null);
   const workflowStepRefs = useRef([]);
-=======
-  const similarRailRef = useRef(null);  const workflowStepRefs = useRef([]);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const moodVideoRef = useRef(null);
   const moodStreamRef = useRef(null);
   const scanTimeoutRef = useRef(null);
   const moodSamplesRef = useRef<FaceSignals[]>([]);
   const moodSampleIntervalRef = useRef(null);
-<<<<<<< HEAD
   const moodSamplingActiveRef = useRef(false);
   const moodSamplingBusyRef = useRef(false);
   const timerIntervalRef = useRef(null);
@@ -262,18 +204,11 @@ export default function App() {
   const cookingProgressItemRefs = useRef([]);
   const wakeLockRef = useRef<any>(null);
   const timerTargetRef = useRef(0);
-=======
-  const timerIntervalRef = useRef(null);
-  const completionTimeoutRef = useRef(null);
-  const cookingStepRef = useRef(null);
-  const cookingProgressItemRefs = useRef([]);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const profileReturnScrollRef = useRef(0);
 
 
   useEffect(() => {
     document.documentElement.classList.toggle("kiku-dark", darkMode);
-<<<<<<< HEAD
     try { localStorage.setItem("kiku-theme", darkMode ? "dark" : "light"); } catch { /* optional browser preference */ }
   }, [darkMode]);
 
@@ -307,29 +242,6 @@ export default function App() {
     };
     window.addEventListener("kiku-auth-change", onAuthChange);
     return () => { cancelled = true; window.removeEventListener("kiku-auth-change", onAuthChange); };
-=======
-    localStorage.setItem("kiku-theme", darkMode ? "dark" : "light");
-  }, [darkMode]);
-
-  useEffect(() => {
-    const syncAuth = () => {
-      setIsLoggedIn(localStorage.getItem("kiku-authenticated") === "true");
-    };
-    const onAuthChange = (event) => {
-      if (typeof event?.detail?.authenticated === "boolean") {
-        setIsLoggedIn(event.detail.authenticated);
-      } else {
-        syncAuth();
-      }
-    };
-
-    window.addEventListener("storage", syncAuth);
-    window.addEventListener("kiku-auth-change", onAuthChange);
-    return () => {
-      window.removeEventListener("storage", syncAuth);
-      window.removeEventListener("kiku-auth-change", onAuthChange);
-    };
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   }, []);
 
   useEffect(() => {
@@ -337,11 +249,8 @@ export default function App() {
       const saved = getKikuSavedItems();
       setLikedDishes(new Set((saved.dishes || []).map((item) => item.name)));
       setSavedRecipes(new Set((saved.recipes || []).map((item) => item.name)));
-<<<<<<< HEAD
       setLikedRestaurants(new Set((saved.restaurants || []).map((item) => item.name)));
       setPincode(getKikuPincode());
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       setPreferenceVersion((value) => value + 1);
     };
     window.addEventListener("kiku-saved-change", syncStoredKikuData);
@@ -394,54 +303,63 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
     const normalized = String(pincode || "").trim();
     if (!/^[1-9]\d{5}$/.test(normalized)) {
       setRegionStatus("idle");
       setRegionStatusError("");
+      setRegionalRestaurants([]);
       return undefined;
     }
+    if (regionRefreshStartedRef.current === normalized) return undefined;
+    regionRefreshStartedRef.current = normalized;
 
     let cancelled = false;
-    let timer: number | null = null;
-    let elapsed = 0;
+    let pollTimer = null;
     let completionPublished = false;
+    const startedAt = Date.now();
+    let delayMs = 2000;
 
     const stopPolling = () => {
-      if (timer !== null) window.clearInterval(timer);
-      timer = null;
+      if (pollTimer !== null) window.clearTimeout(pollTimer);
+      pollTimer = null;
     };
 
-    const publish = (status: any) => {
+    const publish = (status) => {
       if (cancelled) return;
       setRegionStatus(status.status || "idle");
       setRegionStatusError(status.error || "");
-      if ((status.status === "ready" || status.status === "stale") && !completionPublished) {
+      if (Array.isArray(status.restaurants)) setRegionalRestaurants(status.restaurants);
+      if ((status.status === "ready" || status.status === "stale" || status.status === "empty" || status.status === "error") && !completionPublished) {
         completionPublished = true;
         stopPolling();
         setRegionDataVersion((value) => value + 1);
       }
-      if (status.status === "error") stopPolling();
+    };
+
+    const schedulePoll = () => {
+      if (cancelled) return;
+      if (Date.now() - startedAt >= 60_000) {
+        stopPolling();
+        setRegionStatus("error");
+        setRegionStatusError("Regional lookup is taking longer than expected. Please retry; no provider data has been mixed across PINs.");
+        return;
+      }
+      pollTimer = window.setTimeout(() => { void poll(); }, delayMs);
+      delayMs = Math.min(10_000, Math.round(delayMs * 1.5));
     };
 
     const poll = async () => {
       if (cancelled) return;
-      elapsed += 1000;
       try {
         const status = await api.regionStatus(normalized);
         publish(status);
-        if (elapsed >= 45_000 && status.status !== "ready" && status.status !== "stale") {
-          stopPolling();
-          if (!cancelled) {
-            setRegionStatus("error");
-            setRegionStatusError("Regional lookup is taking longer than expected. Kiku is keeping this PIN isolated from other users.");
-          }
-        }
+        if (status.status === "ready" || status.status === "stale" || status.status === "empty" || status.status === "error") return;
+        schedulePoll();
       } catch (error) {
-        if (!cancelled && elapsed >= 45_000) {
-          stopPolling();
+        if (!cancelled) {
           setRegionStatus("error");
           setRegionStatusError(error instanceof Error ? error.message : "Regional lookup failed.");
+          stopPolling();
         }
       }
     };
@@ -453,9 +371,8 @@ export default function App() {
         const started = await api.regionRefresh(normalized);
         if (cancelled) return;
         publish(started);
-        if (!["ready", "stale"].includes(started.status)) {
-          timer = window.setInterval(() => { void poll(); }, 1000);
-          void poll();
+        if (!["ready", "stale", "empty", "error"].includes(started.status)) {
+          await poll();
         }
       } catch (error) {
         if (!cancelled) {
@@ -470,8 +387,6 @@ export default function App() {
   }, [pincode]);
 
   useEffect(() => {
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     const isMainRoute = !profileRoute && !authRoute;
     if (isMainRoute && !isLoggedIn && !pincode && !pincodePromptSeen) {
       const timer = window.setTimeout(() => setPincodeOpen(true), 650);
@@ -532,12 +447,11 @@ export default function App() {
     };
   }, []);
 
-<<<<<<< HEAD
   const discoveryDishes = catalogDishes;
 
   const getAssistantExternalUrl = (item) => {
     const candidates = [
-      item?.listingUrl, item?.listing_url, item?.orderUrl, item?.order_url, item?.sourceUrl, item?.source_url,
+      item?.restaurantUrl, item?.restaurant_url, item?.listingUrl, item?.listing_url, item?.orderUrl, item?.order_url, item?.sourceUrl, item?.source_url,
       Array.isArray(item?.orderLinks) ? item.orderLinks[0]?.url || item.orderLinks[0]?.href : null,
     ];
     for (const value of candidates) {
@@ -558,20 +472,88 @@ export default function App() {
     }
   };
 
-  const normalizeCatalogDish = (item) => ({
-    ...item,
-    price: item?.price || "—",
-    time: item?.time || "",
-    rating: item?.rating || "—",
-    tags: Array.isArray(item?.tags) ? item.tags.map((tag) => String(tag)).filter(Boolean) : [],
-    art: item?.art || "🍽️",
-    artClass: item?.artClass || "dish-art-rose",
-    restaurantMeta: item?.restaurantMeta || item?.restaurant || "",
-    ...normalizeDietaryEvidence(item),
-    orderOnlineAvailable: item?.orderOnlineAvailable === true || Boolean(item?.orderUrl || item?.order_url || (Array.isArray(item?.orderLinks) && item.orderLinks.length)),
-    cookAtHomeAvailable: item?.cookAtHomeAvailable === true || item?.recipeAvailable === true || item?.tags?.some?.((tag) => /^(cook at home|recipe)$/i.test(tag)),
-    recipeAvailable: item?.recipeAvailable === true,
-  });
+  const normalizeCatalogDish = (item) => {
+    const numericPrice = Number(item?.finalPrice ?? item?.final_price ?? item?.price);
+    const orderUrl = item?.orderUrl || item?.order_url || item?.listingUrl || item?.listing_url || item?.dishUrl || item?.dish_url || item?.restaurantUrl || item?.restaurant_url || null;
+    return {
+      ...item,
+      price: item?.price || "—",
+      priceValue: Number.isFinite(numericPrice) ? numericPrice : null,
+      time: item?.time || "",
+      rating: item?.rating || item?.itemRating || "—",
+      tags: Array.isArray(item?.tags) ? item.tags.map((tag) => String(tag)).filter(Boolean) : [],
+      art: item?.art || "🍽️",
+      artClass: item?.artClass || "dish-art-rose",
+      restaurantMeta: item?.restaurantMeta || item?.restaurant || "",
+      restaurantUrl: item?.restaurantUrl || item?.restaurant_url || null,
+      listingUrl: item?.listingUrl || item?.listing_url || null,
+      orderUrl,
+      provider: item?.provider || null,
+      categoryName: item?.categoryName || item?.category_name || null,
+      sourceDescription: item?.description || item?.descriptor || null,
+      imageUrl: item?.imageUrl || item?.image_url || item?.image || item?.thumbnail || item?.thumbnail_url || item?.images?.[0] || null,
+      ...normalizeDietaryEvidence(item),
+      orderOnlineAvailable: item?.orderOnlineAvailable === true || Boolean(orderUrl),
+      cookAtHomeAvailable: item?.cookAtHomeAvailable === true || item?.recipeAvailable === true || item?.tags?.some?.((tag) => /^(cook at home|recipe)$/i.test(tag)),
+      recipeAvailable: item?.recipeAvailable === true,
+    };
+  };
+
+  const getDishImage = (dish) => {
+    const value = dish?.imageUrl || dish?.image_url || dish?.image || dish?.thumbnail || dish?.thumbnail_url || dish?.images?.[0] || null;
+    if (!value) return null;
+    try {
+      const url = new URL(String(value), window.location.origin);
+      return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+    } catch {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (!activeDish) {
+      setActiveDishDescription("");
+      setActiveDishDescriptionLoading(false);
+      setActiveDishDescriptionSource(null);
+      return undefined;
+    }
+    const key = [activeDish.name, activeDish.restaurant, activeDish.provider || "", pincode].join("|").toLowerCase();
+    const cached = dishDescriptionCacheRef.current.get(key);
+    if (cached) {
+      setActiveDishDescription(cached.description);
+      setActiveDishDescriptionSource(cached.source);
+      setActiveDishDescriptionLoading(false);
+      return undefined;
+    }
+    let cancelled = false;
+    setActiveDishDescription(activeDish.sourceDescription || "");
+    setActiveDishDescriptionSource(null);
+    setActiveDishDescriptionLoading(true);
+    api.dishDescription({
+      name: activeDish.name,
+      restaurant: activeDish.restaurant,
+      category: activeDish.categoryName || "",
+      cuisine: (activeDish.restaurantMeta || "").split(" • ")[0] || "",
+      provider: activeDish.provider || "",
+      sourceDescription: activeDish.sourceDescription || "",
+      city: "",
+      pincode: pincode || null,
+    }).then((result) => {
+      if (cancelled) return;
+      const description = result.description || activeDish.sourceDescription || "";
+      const source = result.generated ? "ai" : "fallback";
+      dishDescriptionCacheRef.current.set(key, { description, source });
+      setActiveDishDescription(description);
+      setActiveDishDescriptionSource(source);
+    }).catch(() => {
+      if (cancelled) return;
+      setActiveDishDescription(activeDish.sourceDescription || "");
+      setActiveDishDescriptionSource("error");
+    }).finally(() => {
+      if (!cancelled) setActiveDishDescriptionLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [activeDish, pincode]);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -598,7 +580,7 @@ export default function App() {
     let cancelled = false;
     const preferences = getKikuPreferences();
     api.discover("", { pincode, dietary: preferences.dietary, allergies: preferences.allergies }).then((result) => {
-      if (!cancelled) setCatalogDishes((result.dishes || []).map(normalizeCatalogDish));
+      if (!cancelled) { setCatalogDishes((result.dishes || []).map(normalizeCatalogDish)); setRegionalRestaurants(result.restaurants || []); }
     }).catch(() => { /* Keep the production UI empty when the catalog API is unavailable. */ });
     return () => { cancelled = true; };
   }, [preferenceVersion, regionDataVersion, pincode]);
@@ -642,17 +624,10 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     let loading = false;
-=======
-  useEffect(() => {
-    let cancelled = false;
-    let loading = false;
-    let activeController: AbortController | null = null;
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
     const loadRecipes = async () => {
       if (cancelled || loading) return;
       loading = true;
-<<<<<<< HEAD
       setRecipesLoading(true);
       setRecipesError("");
       try {
@@ -670,82 +645,15 @@ export default function App() {
           setRecipesError("The live recipe feed is temporarily unavailable. Please try again shortly.");
         }
       } finally {
-=======
-      activeController?.abort();
-      activeController = new AbortController();
-      const timeoutId = window.setTimeout(() => activeController?.abort(), 8000);
-      setRecipesLoading(true);
-      setRecipesError("");
-
-      try {
-        const response = await fetch(recipeApiUrl, {
-          headers: { Accept: "application/json" },
-          cache: "no-cache",
-          signal: activeController.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Recipe feed returned ${response.status}.`);
-        }
-
-        const payload = await response.json();
-        const source = Array.isArray(payload)
-          ? payload
-          : Array.isArray(payload?.recipes)
-            ? payload.recipes
-            : Array.isArray(payload?.data)
-              ? payload.data
-              : [];
-
-        const normalized = source
-          .map(normalizeRecipe)
-          .filter((recipe) => recipe.title && recipe.title !== "Untitled recipe");
-
-        if (!cancelled) {
-          // Prefer live scraper/API data. Fall back to six existing Kiku
-          // recipes only when the live feed has nothing usable.
-          setRecipes(shuffleArray(normalized.length ? normalized : fallbackRecipes));
-          setRecipesLoading(false);
-        }
-      } catch (error) {
-        if (!cancelled && error?.name !== "AbortError") {
-          // Keep the page useful while the scraper/API is offline. The API
-          // remains the primary source and will take over automatically once it responds.
-          setRecipes(shuffleArray(fallbackRecipes));
-          setRecipesLoading(false);
-          setRecipesError("");
-        }
-      } finally {
-        window.clearTimeout(timeoutId);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         loading = false;
       }
     };
 
-<<<<<<< HEAD
     const timer = window.setTimeout(loadRecipes, recipeQuery.trim() ? 320 : 0);
     const onVisibilityChange = () => { if (document.visibilityState === "visible") loadRecipes(); };
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => { cancelled = true; window.clearTimeout(timer); document.removeEventListener("visibilitychange", onVisibilityChange); };
   }, [recipeQuery]);
-=======
-    loadRecipes();
-    const interval = window.setInterval(loadRecipes, 5 * 60 * 1000);
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") loadRecipes();
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () => {
-      cancelled = true;
-      activeController?.abort();
-      window.clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-  }, []);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   const visibleRecipes = useMemo(() => {
     const query = recipeQuery.trim().toLowerCase();
@@ -760,25 +668,35 @@ export default function App() {
       };
       return scoreKikuDish(pseudoDish, preferences).allowed;
     };
-    const filtered = recipes.filter(matchesPreferences);
+    const matchesCuisineFilter = (recipe) =>
+      recipeCuisineFilter !== "indian" || String(recipe.cuisine || "").trim().toLowerCase() === "indian";
 
-    if (!query) return filtered.slice(0, 6);
+    const filtered = recipes.filter((recipe) => matchesPreferences(recipe) && matchesCuisineFilter(recipe));
 
-    return filtered
+    // When a mood has been detected (via face scan or manual pick), softly
+    // bring recipes that suit that mood to the front instead of hiding the
+    // rest — the live recipe feed is small, so filtering it down hard would
+    // often leave an empty grid.
+    const ranked = selectedMood
+      ? [...filtered].sort((a, b) => Number(recipeMatchesMood(b, selectedMood)) - Number(recipeMatchesMood(a, selectedMood)))
+      : filtered;
+
+    if (!query) return ranked.slice(0, 8);
+
+    return ranked
       .filter((recipe) =>
         [recipe.title, recipe.description, recipe.cuisine, ...(recipe.tags || [])]
           .join(" ")
           .toLowerCase()
           .includes(query)
       )
-      .slice(0, 6);
-  }, [recipes, recipeQuery, preferenceVersion]);
+      .slice(0, 8);
+  }, [recipes, recipeQuery, recipeCuisineFilter, selectedMood, preferenceVersion]);
 
   const hasRecommendationData = Boolean(selectedMood);
 
   const visibleDishes = useMemo(() => {
     const preferences = getKikuPreferences();
-<<<<<<< HEAD
     const matchesDiscoverFilter = (dish) => {
       const tags = new Set((dish.tags || []).map((tag) => String(tag).trim().toLowerCase()));
       if (discoverFilter === "All") return true;
@@ -802,37 +720,17 @@ export default function App() {
     }
     if (!hasRecommendationData) {
       if (!discoveryDishes.length) return [];
-=======
-    const scoreList = (dishes) => dishes
-      .map((dish, index) => ({ dish, score: scoreKikuDish(dish, preferences).score - index * 0.001 }))
-      .filter((entry) => scoreKikuDish(entry.dish, preferences).allowed)
-      .sort((a, b) => b.score - a.score)
-      .map((entry) => entry.dish);
-
-    if (!hasRecommendationData) {
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       const offset = shuffleSeed % discoveryDishes.length;
       const rotated = [...discoveryDishes.slice(offset), ...discoveryDishes.slice(0, offset)];
       return scoreList(rotated).slice(0, 6);
     }
-<<<<<<< HEAD
     return [];
   }, [catalogDishes, hasRecommendationData, selectedMood, shuffleSeed, preferenceVersion, serverRecommendations, discoverFilter]);
-=======
-
-    const wanted = recommendationSets[selectedMood] || recommendationSets.Calm;
-    return scoreList(wanted.map((name) => discoveryDishes.find((dish) => dish.name === name)).filter(Boolean));
-  }, [hasRecommendationData, selectedMood, shuffleSeed, preferenceVersion]);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   const discoverTitle = hasRecommendationData ? "Recommendations" : "Discover";
   const discoverHeadline = hasRecommendationData ? "Made for this moment" : "Find something that feels right";
   const discoverDescription = hasRecommendationData
-<<<<<<< HEAD
     ? `Based on your ${selectedMood.toLowerCase()} moment and the choices you've made in Kiku.`
-=======
-    ? `Based on your ${selectedMood.toLowerCase()} expression signal and the choices you've made in Kiku.`
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     : "Explore a few ideas, save what catches your eye, and let Kiku learn what fits you over time.";
 
   useEffect(() => {
@@ -921,10 +819,6 @@ export default function App() {
   useEffect(() => {
     return () => {
       clearInterval(timerIntervalRef.current);
-<<<<<<< HEAD
-=======
-      clearTimeout(completionTimeoutRef.current);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     };
   }, []);
 
@@ -941,26 +835,6 @@ export default function App() {
     });
   }, [activeCooking, cookingStep]);
 
-<<<<<<< HEAD
-  // Shared by openDish and goBackFromDish so both paths keep the live
-  // comparison in sync with whatever dish is actually on screen. A
-  // requestId guard discards any response that arrives after the person
-  // has since navigated to a different dish (or closed the modal).
-  const refreshLiveComparison = (dish: Dish) => {
-    setLiveComparison(null);
-    setComparisonStatus("loading");
-    const requestId = comparisonRequestId.current + 1;
-    comparisonRequestId.current = requestId;
-    const preferences = getKikuPreferences();
-    fetchLiveComparison(dish.restaurant, dish.name, pincode, { dietary: preferences.dietary, allergies: preferences.allergies }).then((result) => {
-      if (comparisonRequestId.current !== requestId) return; // stale response
-      setLiveComparison(result);
-      setComparisonStatus(result ? "live" : "fallback");
-    });
-  };
-
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const openDish = (dish: Dish, options: { fromRestaurant?: unknown; pushHistory?: boolean } = {}) => {
     const { fromRestaurant = null, pushHistory = true } = options;
     setDishHistory((history) => {
@@ -969,8 +843,11 @@ export default function App() {
     });
     if (fromRestaurant) setDishReturnRestaurant(fromRestaurant);
     setActiveRestaurant(null);
+    setActiveDishDescription("");
+    setActiveDishDescriptionLoading(false);
+    setActiveDishDescriptionSource(null);
+    setOrderLinkOpening(false);
     setActiveDish(dish);
-<<<<<<< HEAD
     if (isLoggedIn) {
       void api.activity({
         type: "view_dish",
@@ -980,14 +857,6 @@ export default function App() {
       }).catch(() => {});
     }
 
-    // Live comparison fetches only menu prices; location is used as a
-    // discovery hint and never as a delivery/ETA calculation.
-    // comparison data, not a replacement for it - the modal already has
-    // something reasonable to show immediately, and only swaps to live
-    // numbers if/when they arrive.
-    refreshLiveComparison(dish);
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const openRestaurant = (restaurant) => {
@@ -995,7 +864,6 @@ export default function App() {
     setDishReturnRestaurant(null);
     setActiveDish(null);
     setVegOnly(false);
-<<<<<<< HEAD
     setAllergenSafeOnly(false);
     setRestaurantSearch("");
     setActiveRestaurant(restaurant);
@@ -1007,10 +875,6 @@ export default function App() {
         metadata: { cuisine: restaurant.cuisine || null },
       }).catch(() => {});
     }
-=======
-    setRestaurantSearch("");
-    setActiveRestaurant(restaurant);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const closeDish = () => {
@@ -1024,10 +888,6 @@ export default function App() {
       if (history.length > 0) {
         const previousDish = history[history.length - 1];
         setActiveDish(previousDish);
-<<<<<<< HEAD
-        refreshLiveComparison(previousDish);
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         return history.slice(0, -1);
       }
 
@@ -1042,28 +902,12 @@ export default function App() {
     });
   };
 
-<<<<<<< HEAD
-  // Covers every way the dish modal can close (Escape key, back
-  // navigation, logout, etc.) in one place, rather than remembering to
-  // reset comparison state at each individual call site that nulls
-  // activeDish. Also invalidates any in-flight fetch so a slow response
-  // can't call setState after the person has moved on.
-  useEffect(() => {
-    if (activeDish) return;
-    comparisonRequestId.current += 1;
-    setLiveComparison(null);
-    setComparisonStatus("idle");
-  }, [activeDish]);
-
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   const focusDishSearch = () => {
     setActiveSection("search");
     document.getElementById("discover-search")?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.setTimeout(() => dishSearchInputRef.current?.focus(), 420);
   };
 
-<<<<<<< HEAD
   const buildRecipeContext = (recipeState) => {
     if (!recipeState?.recipe) return null;
     const recipe = recipeState.recipe;
@@ -1097,16 +941,12 @@ export default function App() {
   const openAssistant = (recipeState = null) => {
     const context = recipeState || (activeCooking ? { recipe: activeCooking.recipe, recipeId: activeCooking.recipeId, dish: activeCooking.dish } : activeRecipe);
     setAssistantRecipeContext(buildRecipeContext(context));
-=======
-  const openAssistant = () => {
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setAssistantOpen(true);
   };
 
   const closeAssistant = () => {
     setAssistantOpen(false);
     setAssistantQuery("");
-<<<<<<< HEAD
     setAssistantRecipeContext(null);
   };
 
@@ -1183,8 +1023,6 @@ export default function App() {
     } finally {
       setAssistantBusy(false);
     }
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const assistantMatches = useMemo(() => {
@@ -1212,7 +1050,6 @@ export default function App() {
       .sort((a, b) => b.score - a.score)
       .map((entry) => entry.dish)
       .slice(0, 3);
-<<<<<<< HEAD
   }, [assistantQuery, catalogDishes, preferenceVersion, selectedMood]);
 
   const navigatePublicInfo = (route: Exclude<PublicInfoRoute, null>) => {
@@ -1263,12 +1100,6 @@ export default function App() {
 
   const navigateAuth = (route, returnTo = "home") => {
     setAuthReturn(returnTo);
-=======
-  }, [assistantQuery, preferenceVersion, selectedMood]);
-
-  const navigateAuth = (route, returnTo = "home") => {
-    sessionStorage.setItem("kiku-auth-return", returnTo);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     if (window.location.pathname !== `/${route}`) {
       window.history.pushState({}, "", `/${route}`);
     } else {
@@ -1288,7 +1119,6 @@ export default function App() {
     navigateAuth("login", returnTo);
   };
 
-<<<<<<< HEAD
   const handleAuthSuccess = async () => {
     await hydrateKikuUserState();
     await hydrateKikuPincode();
@@ -1302,17 +1132,6 @@ export default function App() {
     if (returnTo === "profile" || returnTo.startsWith("profile/")) {
       const profileTarget = returnTo === "profile" ? "profile" : returnTo;
       window.location.hash = profileTarget;
-=======
-  const handleAuthSuccess = () => {
-    setIsLoggedIn(true);
-    setAuthRoute(null);
-    const returnTo = sessionStorage.getItem("kiku-auth-return") || "home";
-    sessionStorage.removeItem("kiku-auth-return");
-    window.history.replaceState(null, "", window.location.pathname.startsWith("/login") || window.location.pathname.startsWith("/signup") ? "/" : window.location.pathname);
-    window.dispatchEvent(new CustomEvent("kiku-auth-change", { detail: { authenticated: true } }));
-    if (returnTo === "profile") {
-      window.location.hash = "profile";
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       setProfileRoute(true);
       window.scrollTo({ top: 0, behavior: "auto" });
     } else {
@@ -1322,11 +1141,7 @@ export default function App() {
   };
 
   const handleSkipAuth = () => {
-<<<<<<< HEAD
     clearAuthReturn();
-=======
-    sessionStorage.removeItem("kiku-auth-return");
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setAuthRoute(null);
     window.history.replaceState(null, "", "/");
     window.location.hash = "";
@@ -1346,7 +1161,6 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: profileReturnScrollRef.current, behavior: "auto" }));
   };
 
-<<<<<<< HEAD
   const handleProfileSignOut = async () => {
     try { await api.logout(); } catch { /* server may already have expired the session */ }
     await hydrateKikuUserState();
@@ -1401,27 +1215,10 @@ export default function App() {
     setActiveRestaurant(null);
     setActiveCooking(null);
     setActiveRecipe({ dish, recipe, recipeId: recipeItem?.id ? String(recipeItem.id) : recipe.id || null });
-=======
-  const handleProfileSignOut = () => {
-    localStorage.removeItem("kiku-authenticated");
-    setIsLoggedIn(false);
-    window.dispatchEvent(new CustomEvent("kiku-auth-change", { detail: { authenticated: false } }));
-    closeProfile();
-  };
-
-  const openRecipe = (dish) => {
-    setActiveSection("recipes");
-    const recipe = getRecipeForDish(dish);
-    setActiveDish(null);
-    setActiveRestaurant(null);
-    setActiveCooking(null);
-    setActiveRecipe({ dish, recipe });
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setRecipeTab("Ingredients");
     setCookingStep(0);
     setTimerRemaining(recipe.steps[0]?.duration || 0);
     setTimerRunning(false);
-<<<<<<< HEAD
     setStepCompletePopup(false);
     setRecipeServingCount(parseServingCount(recipe.servings, 0));
     setAssistantRecipeContext(null);
@@ -1449,26 +1246,6 @@ export default function App() {
       artClass: "",
     };
     await openRecipe(dish, recipe.details || null, recipe);
-=======
-
-    setIngredientQuantities(
-      Object.fromEntries(recipe.ingredients.map(([, amount], index) => [index, 1]))
-    );
-  };
-
-  // Adapts a live recipe-feed item (title/description/cuisine) to the
-  // { name, descriptor, restaurant, rating, time } shape openRecipe expects,
-  // so the "View recipe" button on the recipes-grid card can reuse the same
-  // Recipe Page / Cooking Mode flow as the "Cook" button on a dish card.
-  const openRecipeFromFeed = (recipe) => {
-    openRecipe({
-      name: recipe.title,
-      descriptor: recipe.description || recipe.title,
-      restaurant: recipe.cuisine || "Kiku's kitchen",
-      rating: "4.7",
-      time: recipe.time || "30 minutes",
-    });
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const closeRecipe = () => {
@@ -1477,7 +1254,6 @@ export default function App() {
     setActiveSection("recipes");
   };
 
-<<<<<<< HEAD
   const requestCookingWakeLock = async () => {
     try {
       if (typeof navigator === "undefined" || !("wakeLock" in navigator)) return;
@@ -1508,17 +1284,6 @@ export default function App() {
       recipe,
       servingCount: recipeServingCount,
       baseServings: parseServingCount(recipe.servings, 0),
-=======
-  const startCooking = () => {
-    if (!activeRecipe) return;
-    const firstStep = 0;
-    const recipe = activeRecipe.recipe;
-    clearInterval(timerIntervalRef.current);
-    clearTimeout(completionTimeoutRef.current);
-    setActiveCooking({
-      dish: activeRecipe.dish,
-      recipe,
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       returnRecipe: activeRecipe,
       returnDish: activeRecipe.dish,
     });
@@ -1527,26 +1292,16 @@ export default function App() {
     setTimerRemaining(recipe.steps[firstStep]?.duration || 0);
     setTimerRunning(false);
     setStepCompletePopup(false);
-<<<<<<< HEAD
     void requestCookingWakeLock();
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const closeCooking = () => {
     clearInterval(timerIntervalRef.current);
-<<<<<<< HEAD
     timerTargetRef.current = 0;
     setTimerRunning(false);
     setStepCompletePopup(false);
     setActiveCooking(null);
     void releaseCookingWakeLock();
-=======
-    clearTimeout(completionTimeoutRef.current);
-    setTimerRunning(false);
-    setStepCompletePopup(false);
-    setActiveCooking(null);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const backToRecipeFromCooking = () => {
@@ -1556,10 +1311,6 @@ export default function App() {
     }
 
     clearInterval(timerIntervalRef.current);
-<<<<<<< HEAD
-=======
-    clearTimeout(completionTimeoutRef.current);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setTimerRunning(false);
     setStepCompletePopup(false);
     setActiveCooking(null);
@@ -1570,15 +1321,9 @@ export default function App() {
     if (!activeCooking) return;
     const nextIndex = Math.max(0, Math.min(index, activeCooking.recipe.steps.length - 1));
     clearInterval(timerIntervalRef.current);
-<<<<<<< HEAD
     setStepCompletePopup(false);
     setTimerRunning(false);
     timerTargetRef.current = 0;
-=======
-    clearTimeout(completionTimeoutRef.current);
-    setStepCompletePopup(false);
-    setTimerRunning(false);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setCookingStep(nextIndex);
     setTimerRemaining(activeCooking.recipe.steps[nextIndex]?.duration || 0);
     requestAnimationFrame(() => {
@@ -1589,12 +1334,9 @@ export default function App() {
   const nextCookingStep = () => {
     if (!activeCooking) return;
     if (cookingStep >= activeCooking.recipe.steps.length - 1) {
-<<<<<<< HEAD
       if (isLoggedIn) {
         void api.activity({ type: "recipe_complete", entityType: "recipe", entityId: activeCooking.dish?.name || null, metadata: { title: activeCooking.dish?.name || null } }).catch(() => {});
       }
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       closeCooking();
       return;
     }
@@ -1606,7 +1348,6 @@ export default function App() {
   };
 
   const toggleRecipeSaved = (dishName) => {
-<<<<<<< HEAD
     const recipe = activeRecipe?.recipe?.title === dishName ? activeRecipe.recipe : null;
     const savedRecipe = {
       name: dishName,
@@ -1614,22 +1355,11 @@ export default function App() {
       time: recipe?.time || "",
       cuisine: recipe?.cuisine || "",
       rating: recipe?.rating || "Not provided by source",
-=======
-    const dish = discoveryDishes.find((item) => item.name === dishName) || (activeRecipe?.dish?.name === dishName ? activeRecipe.dish : null);
-    const recipe = dish ? getRecipeForDish(dish) : null;
-    const savedRecipe = {
-      name: dishName,
-      description: recipe?.description || dish?.descriptor || "Kiku recipe",
-      time: recipe?.time || dish?.time || "30 min",
-      cuisine: recipe?.cuisine || dish?.restaurantMeta?.split(" • ")[0] || dish?.restaurant || "Kiku kitchen",
-      rating: recipe?.rating || dish?.rating || "4.7",
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     };
     toggleKikuSavedRecipe(savedRecipe);
     setSavedRecipes(new Set(getKikuSavedItems().recipes.map((item) => item.name)));
   };
 
-<<<<<<< HEAD
   const adjustServings = (delta) => {
     setRecipeServingCount((current) => Math.min(12, Math.max(1, current + delta)));
   };
@@ -1637,13 +1367,6 @@ export default function App() {
   const scaledRecipeAmount = (amount, recipe = activeRecipe?.recipe, servingCount = recipeServingCount) => {
     if (!recipe) return amount;
     return scaleIngredientAmount(amount, parseServingCount(recipe.servings, 0), servingCount);
-=======
-  const adjustIngredient = (index, delta) => {
-    setIngredientQuantities((current) => ({
-      ...current,
-      [index]: Math.max(0, (current[index] || 1) + delta),
-    }));
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const formatTimer = (seconds) => {
@@ -1652,7 +1375,6 @@ export default function App() {
     return `${mins}:${secs}`;
   };
 
-<<<<<<< HEAD
   const getCookingIngredientNames = (step) => {
     if (!activeCooking || !step) return [];
     const explicit = Array.isArray(step.ingredients) ? step.ingredients.filter(Boolean) : [];
@@ -1742,58 +1464,6 @@ export default function App() {
   const closeRestaurant = () => {
     setVegOnly(false);
     setAllergenSafeOnly(false);
-=======
-  const getCookingIngredientState = () => {
-    if (!activeCooking) return [];
-    const ingredients = activeCooking.recipe.ingredients || [];
-    const steps = activeCooking.recipe.steps || [];
-    const currentIngredients = new Set(steps[cookingStep]?.ingredients || []);
-    const usedIngredients = new Set();
-
-    steps.slice(0, cookingStep).forEach((step) => {
-      (step.ingredients || []).forEach((ingredient) => usedIngredients.add(ingredient));
-    });
-
-    return ingredients.map(([name, amount]) => ({
-      name,
-      amount,
-      current: currentIngredients.has(name),
-      used: usedIngredients.has(name) && !currentIngredients.has(name),
-    }));
-  };
-
-  const startCurrentTimer = () => {
-    if (!activeCooking) return;
-    const duration = activeCooking.recipe.steps[cookingStep]?.duration || 0;
-    if (!duration || timerRunning) return;
-
-    setTimerRemaining((current) => current || duration);
-    setTimerRunning(true);
-
-    clearInterval(timerIntervalRef.current);
-    timerIntervalRef.current = window.setInterval(() => {
-      setTimerRemaining((current) => {
-        if (current <= 1) {
-          clearInterval(timerIntervalRef.current);
-          setTimerRunning(false);
-          setStepCompletePopup(true);
-
-          clearTimeout(completionTimeoutRef.current);
-          completionTimeoutRef.current = window.setTimeout(() => {
-            setStepCompletePopup(false);
-            nextCookingStep();
-          }, 8000);
-
-          return 0;
-        }
-        return current - 1;
-      });
-    }, 1000);
-  };
-
-  const closeRestaurant = () => {
-    setVegOnly(false);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setRestaurantSearch("");
     setActiveRestaurant(null);
   };
@@ -1806,19 +1476,10 @@ export default function App() {
   };
 
   const toggleRestaurantLike = (restaurantName) => {
-<<<<<<< HEAD
     const restaurant = restaurantCatalog.find((item) => item.name === restaurantName);
     if (!restaurant) return;
     toggleKikuSavedRestaurant({ name: restaurant.name, cuisine: restaurant.cuisine });
     setLikedRestaurants(new Set(getKikuSavedItems().restaurants.map((item) => item.name)));
-=======
-    setLikedRestaurants((current) => {
-      const next = new Set(current);
-      if (next.has(restaurantName)) next.delete(restaurantName);
-      else next.add(restaurantName);
-      return next;
-    });
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const restaurantCatalog = useMemo(() => {
@@ -1831,39 +1492,21 @@ export default function App() {
       const cuisine = (dishes[0]?.restaurantMeta || "").split(" • ")[0] || "Multi-cuisine";
       return { name, cuisine, dishes };
     });
-<<<<<<< HEAD
   }, [discoveryDishes]);
-=======
-  }, []);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   const similarDishes = useMemo(() => {
     if (!activeDish) return [];
     return discoveryDishes.filter((dish) => dish.name !== activeDish.name).slice(0, 8);
-<<<<<<< HEAD
   }, [activeDish, discoveryDishes]);
-=======
-  }, [activeDish]);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   const searchMatches = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) return [];
-<<<<<<< HEAD
     if (searchResults.length) return searchResults.slice(0, 5);
     return discoveryDishes
       .filter((dish) => [dish.name, dish.restaurant, dish.descriptor, ...(dish.tags || [])].some((value) => String(value || "").toLowerCase().includes(query)))
       .slice(0, 5);
   }, [searchQuery, searchResults, discoveryDishes]);
-=======
-    return discoveryDishes
-      .filter((dish) =>
-        [dish.name, dish.restaurant, dish.descriptor, ...(dish.tags || [])]
-          .some((value) => value.toLowerCase().includes(query))
-      )
-      .slice(0, 5);
-  }, [searchQuery]);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 
   const runDishSearch = () => {
     const firstMatch = searchMatches[0];
@@ -1909,12 +1552,9 @@ export default function App() {
 
   const chooseMood = (mood) => {
     setSelectedMood(mood);
-<<<<<<< HEAD
     if (isLoggedIn) {
       void api.activity({ type: "manual_mood_select", metadata: { mood } }).catch(() => {});
     }
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     requestAnimationFrame(() => scrollToSection("discover"));
   };
 
@@ -1925,11 +1565,8 @@ export default function App() {
   };
 
   const stopMoodSampling = () => {
-<<<<<<< HEAD
     moodSamplingActiveRef.current = false;
     moodSamplingBusyRef.current = false;
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     if (moodSampleIntervalRef.current) {
       window.clearInterval(moodSampleIntervalRef.current);
       moodSampleIntervalRef.current = null;
@@ -1949,7 +1586,6 @@ export default function App() {
     stopMoodStream();
     setScanStatus("idle");
     setMoodStage("result");
-<<<<<<< HEAD
     if (isLoggedIn) {
       void api.activity({
         type: "mood_scan",
@@ -1957,43 +1593,13 @@ export default function App() {
       }).catch(() => {});
     }
 
-=======
-
-    // Shadow/experimental FER2013 comparison - fully background, fire-and-
-    // forget. Uses the last good frame's landmarks (already computed by
-    // the primary detection pass above, no second face detector needed).
-    // Never affects what the user sees; logged locally only, no raw frames.
-    const lastGoodSample = [...samples].reverse().find((sample) => sample.landmarks.length);
-    const scanVideo = moodVideoRef.current;
-    if (lastGoodSample && scanVideo) {
-      getShadowPrediction(scanVideo, lastGoodSample.landmarks)
-        .then((shadow) => {
-          logMoodComparison({
-            timestamp: Date.now(),
-            primaryMood: prediction.mood,
-            primaryConfidence: prediction.confidence,
-            shadowMood: shadow?.mappedMood ?? null,
-            shadowConfidence: shadow ? Math.round(shadow.ferConfidence * 100) : null,
-          });
-        })
-        .catch(() => {
-          // Shadow model is experimental and optional - silently skip
-          // logging this scan's comparison rather than surfacing an error.
-        });
-    }
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const startMoodScan = async (facingMode = "user") => {
     window.clearTimeout(scanTimeoutRef.current);
     stopMoodSampling();
-<<<<<<< HEAD
     stopMoodStream();
     warmUpMoodModel(); // no-op if already loaded/loading
-=======
-    warmUpMoodModel(); // no-op if already loaded/loading
-    warmUpShadowModel(); // no-op if already loaded/loading/unavailable
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setScanStatus("requesting");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
@@ -2008,7 +1614,6 @@ export default function App() {
       // instead of relying on one frame, so a blink or a half-turned head
       // doesn't dominate the result.
       moodSamplesRef.current = [];
-<<<<<<< HEAD
       moodSamplingActiveRef.current = true;
       moodSampleIntervalRef.current = window.setInterval(async () => {
         const video = moodVideoRef.current;
@@ -2021,16 +1626,6 @@ export default function App() {
           console.warn("Kiku mood sampling frame failed:", error);
         } finally {
           moodSamplingBusyRef.current = false;
-=======
-      moodSampleIntervalRef.current = window.setInterval(async () => {
-        const video = moodVideoRef.current;
-        if (!video) return;
-        try {
-          const signals = await readFaceSignalsFromVideo(video);
-          if (signals) moodSamplesRef.current.push(signals);
-        } catch (error) {
-          console.warn("Kiku mood sampling frame failed:", error);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         }
       }, 180);
 
@@ -2053,10 +1648,7 @@ export default function App() {
     setScanStatus("idle");
     setDetectedMood({ mood: moodName, confidence: 100 });
     setMoodStage("result");
-<<<<<<< HEAD
     if (isLoggedIn) void api.activity({ type: "manual_mood_select", metadata: { mood: moodName, source: "mood-scan-panel" } }).catch(() => {});
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   };
 
   const retakeMoodScan = () => {
@@ -2066,10 +1658,6 @@ export default function App() {
     setScanStatus("idle");
     setDetectedMood(null);
     setCraving(null);
-<<<<<<< HEAD
-=======
-    setPrepTime(null);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     setBudget(null);
     setMoodStage("scan");
   };
@@ -2079,7 +1667,6 @@ export default function App() {
     else scrollToSection("discover");
   };
 
-<<<<<<< HEAD
   const handleHeroMoodScan = () => {
     // Keep the scan action inside the original user gesture so browsers can
     // honor getUserMedia permission prompts without requiring a second click.
@@ -2095,8 +1682,6 @@ export default function App() {
     void startMoodScan();
   };
 
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   useEffect(() => {
     return () => {
       window.clearTimeout(scanTimeoutRef.current);
@@ -2105,21 +1690,8 @@ export default function App() {
     };
   }, []);
 
-<<<<<<< HEAD
   useEffect(() => {
     const timer = window.setTimeout(warmUpMoodModel, 2000);
-=======
-  // Preload the mood models' WASM/weights in the background shortly after
-  // the page settles, so the first real scan doesn't stall on a multi-MB
-  // download. This does not touch the camera - it only fetches static
-  // model assets. The shadow model preload silently no-ops until its
-  // converted files exist under /public/models/fer2013/.
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      warmUpMoodModel();
-      warmUpShadowModel();
-    }, 2000);
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -2158,17 +1730,51 @@ export default function App() {
     carousel.scrollBy({ left: direction * amount, behavior: "smooth" });
   };
 
+  const activeDishMatchedRestaurant = useMemo(() => {
+    if (!activeDish?.restaurant) return null;
+    return restaurantCatalog.find((item) => item.name === activeDish.restaurant) || null;
+  }, [activeDish, restaurantCatalog]);
+
+  const activeDishProviderListings = useMemo(() => {
+    if (!activeDish) return [];
+    const targetName = String(activeDish.name || "").trim().toLowerCase();
+    const targetRestaurant = String(activeDish.restaurant || "").trim().toLowerCase();
+    const byProvider = new Map();
+    catalogDishes
+      .filter((dish) => String(dish.name || "").trim().toLowerCase() === targetName && (!targetRestaurant || String(dish.restaurant || "").trim().toLowerCase() === targetRestaurant))
+      .forEach((dish) => {
+        const provider = String(dish.provider || "").trim().toLowerCase();
+        if (!provider || !["swiggy", "zomato", "toing"].includes(provider)) return;
+        const existing = byProvider.get(provider);
+        const priceValue = Number.isFinite(Number(dish.priceValue)) ? Number(dish.priceValue) : null;
+        if (!existing || (existing.priceValue == null && priceValue != null)) {
+          byProvider.set(provider, { platform: provider, url: dish.orderUrl || dish.listingUrl || dish.restaurantUrl || null, priceValue });
+        }
+      });
+    return ["swiggy", "zomato", "toing"].map((platform) => byProvider.get(platform) || { platform, url: null, priceValue: null });
+  }, [activeDish, catalogDishes]);
+
+  const activeDishOrderTarget = useMemo(() => {
+    const live = activeDishProviderListings.filter((entry) => entry.url);
+    if (!live.length) return null;
+    const priced = live.filter((entry) => Number.isFinite(entry.priceValue));
+    return (priced.length ? priced : live).reduce((best, entry) => {
+      if (!best) return entry;
+      if (priced.length && Number(entry.priceValue) < Number(best.priceValue)) return entry;
+      return best;
+    }, null);
+  }, [activeDishProviderListings]);
+
   const isNavItemActive = (item) => {
     if (item.activeKey === "home") return activeSection === "home";
     if (item.activeKey === "discover") return activeSection === "discover";
     if (item.activeKey === "search") return activeSection === "search";
     if (item.activeKey === "mood") return activeSection === "mood";
     if (item.activeKey === "recipes") return activeSection === "recipes";
-    if (item.activeKey === "profile") return false;
+    if (item.activeKey === "profile") return Boolean(profileRoute);
     return false;
   };
 
-<<<<<<< HEAD
   const recipeAllergenMatches = useMemo(() => {
     if (!activeRecipe?.recipe || activeRecipe.recipe.allergenVerified === true) return [];
     const allergies = getKikuPreferences().allergies || [];
@@ -2177,19 +1783,11 @@ export default function App() {
 
   if (authRoute === "login") {
   return (
-=======
-  if (authRoute === "login") {
-    return (
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       <LoginPage
         darkMode={darkMode}
         setDarkMode={setDarkMode}
         onSuccess={handleAuthSuccess}
-<<<<<<< HEAD
         onSignup={() => navigateAuth("signup", getAuthReturn())}
-=======
-        onSignup={() => navigateAuth("signup", sessionStorage.getItem("kiku-auth-return") || "home")}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         onSkip={handleSkipAuth}
       />
     );
@@ -2201,17 +1799,12 @@ export default function App() {
         darkMode={darkMode}
         setDarkMode={setDarkMode}
         onSuccess={handleAuthSuccess}
-<<<<<<< HEAD
         onLogin={() => navigateAuth("login", getAuthReturn())}
-=======
-        onLogin={() => navigateAuth("login", sessionStorage.getItem("kiku-auth-return") || "home")}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         onSkip={handleSkipAuth}
       />
     );
   }
 
-<<<<<<< HEAD
   if (authRoute === "forgot-password") {
     return <ForgotPasswordPage darkMode={darkMode} setDarkMode={setDarkMode} onBack={() => navigateAuth("login")} />;
   }
@@ -2237,8 +1830,6 @@ export default function App() {
     );
   }
 
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   if (profileRoute) {
     return (
       <ProfilePage
@@ -2252,16 +1843,7 @@ export default function App() {
         onOpenAssistant={() => { closeProfile(); requestAnimationFrame(() => setAssistantOpen(true)); }}
         onOpenDish={(dish) => { closeProfile(); requestAnimationFrame(() => openDish(dish)); }}
         onOpenRecipe={(dish) => { closeProfile(); requestAnimationFrame(() => openRecipe(dish)); }}
-<<<<<<< HEAD
         onDeleted={handleAccountDeleted}
-=======
-        onDeleted={() => {
-          setIsLoggedIn(false);
-          setLikedDishes(new Set());
-          setSavedRecipes(new Set());
-          closeProfile();
-        }}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
       />
     );
   }
@@ -2308,7 +1890,7 @@ export default function App() {
           <button
             type="button"
             className="assistant-action"
-            onClick={openAssistant}
+            onClick={() => openAssistant()}
             aria-label="Kiku Assistant"
             title="Kiku Assistant"
           >
@@ -2327,13 +1909,8 @@ export default function App() {
             <ThemeIcon dark={darkMode} />
           </button>
 
-<<<<<<< HEAD
           {authReady && !isLoggedIn && (
             <button className="sign-in" type="button" onClick={() => handleSignIn()}>
-=======
-          {!isLoggedIn && (
-            <button className="sign-in" type="button" onClick={handleSignIn}>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
               Sign In
             </button>
           )}
@@ -2354,15 +1931,11 @@ export default function App() {
             </p>
 
             <div className="hero-actions">
-<<<<<<< HEAD
               <button className="primary-button" type="button" onClick={handleHeroMoodScan}>
-=======
-              <button className="primary-button" type="button" onClick={() => scrollToSection("mood")}>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <span className="sparkle" aria-hidden="true">✦</span>
                 <span>Scan My Mood</span>
               </button>
-              <button className="secondary-button" type="button" onClick={() => scrollToSection("discover")}>
+              <button className="secondary-button" type="button" onClick={() => openAssistant()}>
                 <span className="person-icon" aria-hidden="true"><PersonIcon /></span>
                 <span>Ask Kiku</span>
               </button>
@@ -2415,13 +1988,8 @@ export default function App() {
 
           <div className="discover-toolbar">
             <div className="discover-filters" role="tablist" aria-label="Food filters">
-<<<<<<< HEAD
               {['All', 'Order Online', 'Cook at Home', 'Healthy', 'Quick'].map((filter) => (
                 <button key={filter} className={`discover-filter ${discoverFilter === filter ? "active" : ""}`} type="button" role="tab" aria-selected={discoverFilter === filter} onClick={() => setDiscoverFilter(filter)}>
-=======
-              {['All', 'Order Online', 'Cook at Home', 'Healthy', 'Quick'].map((filter, index) => (
-                <button key={filter} className={`discover-filter ${index === 0 ? "active" : ""}`} type="button">
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                   {filter}
                 </button>
               ))}
@@ -2431,21 +1999,43 @@ export default function App() {
             </button>
           </div>
 
-<<<<<<< HEAD
-          {pincode && (regionStatus === "scraping" || regionStatus === "queued" || regionStatus === "ready" || regionStatus === "stale" || regionStatus === "error") && (
+          {pincode && ["scraping", "queued", "ready", "empty", "stale", "error"].includes(regionStatus) && (
             <div className={`kiku-region-status kiku-region-status-${regionStatus}`} role="status" aria-live="polite">
               <span className="kiku-region-status-dot" aria-hidden="true" />
-              <div>
+              <div className="kiku-region-status-copy">
                 <strong>
-                  {regionStatus === "scraping" ? `Finding food available near ${pincode}…` : regionStatus === "queued" ? `Your regional lookup for ${pincode} is queued…` : regionStatus === "ready" || regionStatus === "stale" ? `Regional data ready for ${pincode}` : `Regional lookup needs attention`}
+                  {regionStatus === "scraping" ? `Finding food available near ${pincode}…` : regionStatus === "queued" ? `Your regional lookup for ${pincode} is queued…` : regionStatus === "ready" ? `Regional data ready for ${pincode}` : regionStatus === "stale" ? `Showing cached regional data for ${pincode}` : regionStatus === "empty" ? `No regional dishes found for ${pincode}` : `Regional lookup needs attention`}
                 </strong>
                 <span>
                   {regionStatus === "scraping" ? "Kiku is collecting provider data for your PIN. Other users and pincodes are processed independently." : null}
                   {regionStatus === "queued" ? "Kiku is keeping this PIN-specific request separate from other users." : null}
-                  {regionStatus === "ready" || regionStatus === "stale" ? "Filters are applied to the regional catalog before dishes are shown." : null}
+                  {regionStatus === "ready" ? "This PIN-scoped snapshot uses the PIN's resolved provider location and is reused for up to 24 hours to reduce repeated provider requests." : null}
+                  {regionStatus === "stale" ? "Fresh provider data is unavailable right now, so Kiku is showing the latest retained PIN snapshot while it retries." : null}
+                  {regionStatus === "empty" ? "The provider returned no usable dishes for the PIN-resolved location. Kiku will retry on a later refresh." : null}
                   {regionStatus === "error" ? regionStatusError : null}
                 </span>
               </div>
+              {(regionStatus === "empty" || regionStatus === "error") && (
+                <button
+                  className="kiku-region-retry"
+                  type="button"
+                  onClick={async () => {
+                    setRegionStatus("scraping");
+                    setRegionStatusError("");
+                    try {
+                      const retry = await api.regionRefresh(pincode, true);
+                      setRegionStatus(retry.status);
+                      if (!["ready", "stale", "empty"].includes(retry.status)) return;
+                      setRegionDataVersion((value) => value + 1);
+                    } catch (error) {
+                      setRegionStatus("error");
+                      setRegionStatusError(error instanceof Error ? error.message : "Regional lookup failed.");
+                    }
+                  }}
+                >
+                  Retry
+                </button>
+              )}
             </div>
           )}
 
@@ -2455,14 +2045,31 @@ export default function App() {
                 <div className="kiku-region-dish-loading-orbit" aria-hidden="true" />
                 <div>
                   <strong>{regionStatus === "scraping" ? `Finding dishes near ${pincode}…` : "Regional lookup is queued…"}</strong>
-                  <span>Kiku will show this PIN's dishes as soon as the regional snapshot is ready. No unrelated region data is shown.</span>
+                  <span>Kiku will show this PIN's live dish results as soon as the regional snapshot is ready. No unrelated region data is shown.</span>
                 </div>
               </div>
             ) : null}
 
-=======
-          <div className="dish-carousel-wrap">
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+            {!catalogDishes.length && ["ready", "stale"].includes(regionStatus) && regionalRestaurants.length > 0 && (
+              <div className="kiku-regional-restaurant-fallback" role="status" aria-live="polite">
+                <div className="kiku-regional-restaurant-fallback-head">
+                  <strong>Restaurants found near {pincode}</strong>
+                  <span>Dish details will appear when the provider returns matching dish data.</span>
+                </div>
+                <div className="kiku-regional-restaurant-list">
+                  {regionalRestaurants.slice(0, 6).map((restaurant) => (
+                    <button key={`${restaurant.provider}-${restaurant.id || restaurant.name}`} type="button" className="kiku-regional-restaurant-item" onClick={() => openRestaurant(restaurant)}>
+                      <span>🍽️</span>
+                      <span>
+                        <strong>{restaurant.name}</strong>
+                        <small>{restaurant.cuisine || restaurant.provider || "Swiggy"}</small>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {carouselScrollLeft > 12 && (
               <button
                 className="dish-carousel-button dish-carousel-button-left"
@@ -2492,7 +2099,25 @@ export default function App() {
                 >
                   <div className={`dish-art ${dish.artClass}`}>
                     <span className="dish-glow" aria-hidden="true" />
-                    <span className="dish-emoji" aria-hidden="true">{dish.art}</span>
+                    {getDishImage(dish) ? (
+                      <>
+                        <img
+                          className="dish-photo"
+                          src={getDishImage(dish)}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          onError={(event) => {
+                            (event.currentTarget as HTMLElement).hidden = true;
+                            const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                            if (fallback) fallback.hidden = false;
+                          }}
+                        />
+                        <span className="dish-emoji dish-photo-fallback" aria-hidden="true" hidden>{dish.art}</span>
+                      </>
+                    ) : (
+                      <span className="dish-emoji" aria-hidden="true">{dish.art}</span>
+                    )}
                     <button
                       className={`save-dish ${likedDishes.has(dish.name) ? "liked" : ""}`}
                       type="button"
@@ -2510,17 +2135,23 @@ export default function App() {
                     <div className="dish-meta-row">
                       <div>
                         <h4>{dish.name}</h4>
-                        <button
-                          className="dish-restaurant dish-restaurant-link"
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            const restaurant = restaurantCatalog.find((item) => item.name === dish.restaurant);
-                            if (restaurant) openRestaurant(restaurant);
-                          }}
-                        >
-                          {dish.restaurant}
-                        </button>
+                        {(() => {
+                          const matchedRestaurant = restaurantCatalog.find((item) => item.name === dish.restaurant);
+                          return matchedRestaurant ? (
+                            <button
+                              className="dish-restaurant dish-restaurant-link"
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                openRestaurant(matchedRestaurant);
+                              }}
+                            >
+                              {dish.restaurant}
+                            </button>
+                          ) : (
+                            <p className="dish-restaurant">{dish.restaurant}</p>
+                          );
+                        })()}
                         <p>{dish.descriptor}</p>
                       </div>
                       <span className="dish-rating">★ {dish.rating}</span>
@@ -2584,7 +2215,7 @@ export default function App() {
                   <span>♡ Matches your {selectedMood.toLowerCase()} moment</span>
                   <span>◌ Keeps your preferences in mind</span>
                   <span>✦ Balances variety with familiarity</span>
-                  <span>⌁ Lets you order, compare, or cook</span>
+                  <span>⌁ Lets you discover, order, or cook</span>
                 </>
               ) : (
                 <>
@@ -2654,11 +2285,7 @@ export default function App() {
                     <span className="kiku-search-result-arrow">›</span>
                   </button>
                 )) : (
-<<<<<<< HEAD
-                  <p className="kiku-search-empty">{(regionStatus === "scraping" || regionStatus === "queued") && pincode ? `Kiku is still finding results near ${pincode}…` : "Try a dish, restaurant, cuisine, or mood."}</p>
-=======
-                  <p className="kiku-search-empty">Try a dish, restaurant, cuisine, or mood.</p>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+                  <p className="kiku-search-empty">{regionStatus === "scraping" || regionStatus === "queued" ? `Kiku is still finding results near ${pincode}…` : regionStatus === "empty" ? `No verified dishes are available for ${pincode} yet. Try again or search by dish or restaurant.` : regionStatus === "error" ? (regionStatusError || "Regional lookup failed.") : "Try a dish, restaurant, cuisine, or mood."}</p>
                 )}
               </div>
             )}
@@ -2688,11 +2315,7 @@ export default function App() {
           className="kiku-workflow-sticky"
           style={{
             "--workflow-step-index": workflowStep,
-<<<<<<< HEAD
           } as CSSProperties & { "--workflow-step-index": number }}
-=======
-          }}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
         >
           <div className="kiku-workflow-visual">
           <div className="kiku-workflow-visual-card">
@@ -2723,7 +2346,7 @@ export default function App() {
           <span className="eyebrow">HOW KIKU WORKS</span>
           <h2>From your area<br />to your plate.</h2>
           <p className="kiku-workflow-intro">
-            Five simple steps turn a vague craving into a nearby dish, a price you can compare,
+            Five simple steps turn a vague craving into a nearby dish, a nearby choice you can explore,
             or a recipe you can make at home.
           </p>
 
@@ -2780,15 +2403,8 @@ export default function App() {
                   Once your scan (or manual pick) tells Kiku how you're feeling, it matches that
                   mood against dishes that fit the moment — comforting, quick, indulgent, whatever
                   the moment calls for — instead of just showing you the same generic menu. For
-<<<<<<< HEAD
-                  every dish it suggests, Kiku can check current menu prices across supported
-                  platforms side-by-side, so you can compare the same dish before choosing where
-                  to order or cook at home.
-=======
-                  every dish it suggests, Kiku also checks prices, delivery fees and ETAs across
-                  Swiggy and Zomato side-by-side, so you're not just eating something that matches
-                  your mood, you're getting it at the better deal too.
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+                  every dish it suggests, Kiku focuses on nearby discovery and the path that fits the moment —
+                  order from the restaurant or open a recipe and cook at home. More ordering options are coming soon.
                 </p>
               </div>
 
@@ -2881,26 +2497,6 @@ export default function App() {
               </div>
 
               <div className="kiku-mood-field">
-<<<<<<< HEAD
-=======
-                <h4>How much time do you have?</h4>
-                <div className="kiku-mood-chips">
-                  {prepTimeOptions.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      className={`kiku-mood-chip ${prepTime === option ? "active" : ""}`}
-                      onClick={() => setPrepTime(option)}
-                      aria-pressed={prepTime === option}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="kiku-mood-field">
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <h4>Budget</h4>
                 <div className="kiku-mood-chips">
                   {budgetOptions.map((option) => (
@@ -2939,9 +2535,17 @@ export default function App() {
       >
         <div className="kiku-recipes-shell">
           <div className="kiku-recipes-heading">
-            <span className="eyebrow">WOAH… YOU WANT TO COOK?</span>
-            <h2>Let me help you find the best recipe ever.</h2>
-            <p>And also make sure you don't burn everything down.</p>
+            <span className="eyebrow">{selectedMood ? "PERSONALIZED FOR YOU" : "WOAH… YOU WANT TO COOK?"}</span>
+            <h2>
+              {selectedMood
+                ? `Recipes for your ${selectedMood.toLowerCase()} moment.`
+                : "Let me help you find the best recipe ever."}
+            </h2>
+            <p>
+              {selectedMood
+                ? `Sorted using your ${selectedMood.toLowerCase()} mood — the closest matches come first.`
+                : "And also make sure you don't burn everything down."}
+            </p>
           </div>
 
           <div className="kiku-recipes-search-wrap">
@@ -2973,9 +2577,28 @@ export default function App() {
             <span>Live recipes are refreshed from Kiku's recipe feed.</span>
           </div>
 
+          <div className="kiku-recipes-filter-row" role="group" aria-label="Filter recipes by cuisine">
+            <button
+              type="button"
+              className={`kiku-recipes-filter-chip ${recipeCuisineFilter === "all" ? "is-active" : ""}`}
+              aria-pressed={recipeCuisineFilter === "all"}
+              onClick={() => setRecipeCuisineFilter("all")}
+            >
+              All cuisines
+            </button>
+            <button
+              type="button"
+              className={`kiku-recipes-filter-chip ${recipeCuisineFilter === "indian" ? "is-active" : ""}`}
+              aria-pressed={recipeCuisineFilter === "indian"}
+              onClick={() => setRecipeCuisineFilter("indian")}
+            >
+              Indian only
+            </button>
+          </div>
+
           <div id="recipes-grid" className="kiku-recipes-grid" aria-live="polite">
             {recipesLoading &&
-              Array.from({ length: 6 }).map((_, index) => (
+              Array.from({ length: 8 }).map((_, index) => (
                 <div
                   className="kiku-recipe-card kiku-recipe-card-skeleton"
                   key={`recipe-skeleton-${index}`}
@@ -3001,6 +2624,9 @@ export default function App() {
                     <span aria-hidden="true">✿</span>
                   )}
                   <span className="kiku-recipe-card-chip">RECIPE</span>
+                  {selectedMood && recipeMatchesMood(recipe, selectedMood) && (
+                    <span className="kiku-recipe-card-mood-chip">FOR YOUR MOOD</span>
+                  )}
                 </div>
 
                 <div className="kiku-recipe-card-body">
@@ -3036,7 +2662,11 @@ export default function App() {
             {!recipesLoading && !recipesError && recipes.length > 0 && visibleRecipes.length === 0 && (
               <div className="kiku-recipes-state">
                 <strong>No recipe matches that search.</strong>
-                <span>Try a broader craving, cuisine, or dish name.</span>
+                <span>
+                  {recipeCuisineFilter === "indian"
+                    ? "Try switching to \"All cuisines\", or a broader search."
+                    : "Try a broader craving, cuisine, or dish name."}
+                </span>
               </div>
             )}
           </div>
@@ -3053,7 +2683,7 @@ export default function App() {
             <h2>FROM CRAVING<br className="desktop-only" /> TO FINAL BITE.</h2>
             <p>
               Tell Kiku what feels right. We’ll help you find what is available around you,
-              compare the details that matter, and choose whether to order or cook.
+              explore the details that matter, and choose whether to order or cook.
             </p>
             <div className="kiku-finale-actions">
               <a className="kiku-finale-primary kiku-finale-signup" href="/signup" aria-label="Get started with Kiku">
@@ -3075,13 +2705,7 @@ export default function App() {
             <button className="kiku-footer-logo" type="button" onClick={() => scrollToSection("home")} aria-label="Kiku home">
               <img src={darkMode ? "/logo-dark.png" : "/logo.png"} alt="Kiku" />
             </button>
-<<<<<<< HEAD
-            <p>Food for every mood. Discover dishes, compare menu prices, find recipes, and choose what fits the moment.</p>
-=======
-            <p>
-              Food for every mood. Discover dishes, compare prices, find recipes, and choose what fits your moment.
-            </p>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+            <p>Food for every mood. Discover dishes, explore nearby choices, find recipes, and choose what fits the moment.</p>
             <div className="kiku-footer-note">Loved food is a form of care. <span aria-hidden="true">✿</span></div>
           </div>
 
@@ -3096,63 +2720,34 @@ export default function App() {
 
           <div className="kiku-footer-column">
             <span>AT KIKU</span>
-            <button type="button" onClick={openAssistant}>Ask Kiku</button>
-<<<<<<< HEAD
+            <button type="button" onClick={() => openAssistant()}>Ask Kiku</button>
             <button type="button" onClick={() => navigatePublicInfo("how-it-works")}>How Kiku works</button>
             <button type="button" onClick={() => navigatePublicInfo("about")}>About Kiku</button>
             <button type="button" onClick={() => navigatePublicInfo("support")}>Support</button>
-=======
-            <button type="button" onClick={() => scrollToSection("recipes")}>Recipe ideas</button>
-            <button type="button" onClick={() => scrollToSection("discover-search")}>Dish search</button>
-            <button type="button" onClick={() => scrollToSection("mood")}>Mood scan</button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           </div>
 
           <div className="kiku-footer-column">
             <span>YOUR JOURNEY</span>
-<<<<<<< HEAD
             <button type="button" onClick={() => setPincodeOpen(true)}>Set your area</button>
             <button type="button" onClick={() => scrollToSection("mood")}>Tell us the moment</button>
             <button type="button" onClick={() => scrollToSection("discover")}>Explore nearby choices</button>
-            <button type="button" onClick={() => scrollToSection("discover-search")}>Compare the options</button>
+            <button type="button" onClick={() => scrollToSection("discover-search")}>Explore your options</button>
             <button type="button" onClick={() => scrollToSection("recipes")}>Order or cook</button>
-=======
-            <p>Set your area</p>
-            <p>Tell us the moment</p>
-            <p>Explore nearby choices</p>
-            <p>Compare the options</p>
-            <p>Order or cook</p>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           </div>
         </div>
 
         <div className="kiku-footer-bottom">
           <div className="kiku-footer-credit-group">
             <span>© 2026 Kiku. Good food, thoughtfully found.</span>
-<<<<<<< HEAD
             <a className="kiku-footer-portfolio" href="https://ashutosh-creates.ashutoshpundhir12.workers.dev/" target="_blank" rel="noreferrer">
-=======
-            <a
-              className="kiku-footer-portfolio"
-              href="https://ashutosh-creates.ashutoshpundhir12.workers.dev/"
-              target="_blank"
-              rel="noreferrer"
-            >
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
               Designed &amp; developed by Ashutosh Pundhir ↗
             </a>
           </div>
           <div className="kiku-footer-bottom-links">
-<<<<<<< HEAD
             <button type="button" onClick={() => navigatePublicInfo("about")}>About</button>
             <button type="button" onClick={() => navigatePublicInfo("privacy")}>Privacy Policy</button>
             <button type="button" onClick={() => navigatePublicInfo("terms")}>Terms</button>
             <button type="button" onClick={() => navigatePublicInfo("accessibility")}>Accessibility</button>
-=======
-            <button type="button">Privacy</button>
-            <button type="button">Terms</button>
-            <button type="button">Accessibility</button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
           </div>
         </div>
       </footer>
@@ -3173,9 +2768,11 @@ export default function App() {
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="dish-modal-top-actions">
-              <button className="dish-modal-back" type="button" onClick={goBackFromDish} aria-label="Go back">
-                ←
-              </button>
+              {(dishHistory.length > 0 || dishReturnRestaurant) && (
+                <button className="dish-modal-back" type="button" onClick={goBackFromDish} aria-label="Go back">
+                  ←
+                </button>
+              )}
               <button className="dish-modal-close" type="button" onClick={closeDish} aria-label="Close dish details">
                 ×
               </button>
@@ -3183,121 +2780,110 @@ export default function App() {
 
             <div className="dish-modal-header">
               <div className={`dish-modal-art ${activeDish.artClass}`}>
-                <span className="dish-emoji" aria-hidden="true">{activeDish.art}</span>
+                {getDishImage(activeDish) ? (
+                  <>
+                    <img
+                      className="dish-modal-photo"
+                      src={getDishImage(activeDish)}
+                      alt=""
+                      loading="eager"
+                      decoding="async"
+                      onError={(event) => {
+                        (event.currentTarget as HTMLElement).hidden = true;
+                        const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                        if (fallback) fallback.hidden = false;
+                      }}
+                    />
+                    <span className="dish-emoji dish-modal-photo-fallback" aria-hidden="true" hidden>{activeDish.art}</span>
+                  </>
+                ) : (
+                  <span className="dish-emoji" aria-hidden="true">{activeDish.art}</span>
+                )}
               </div>
 
               <div className="dish-modal-title">
                 <span className="eyebrow">DISH DETAILS</span>
                 <h2 id="dish-modal-title">{activeDish.name}</h2>
-                <button
-                  className="dish-modal-restaurant dish-modal-restaurant-link"
-                  type="button"
-                  onClick={() => {
-                    const restaurant = restaurantCatalog.find((item) => item.name === activeDish.restaurant);
-                    if (restaurant) openRestaurant(restaurant);
-                  }}
-                >
-                  {activeDish.restaurant}
-                </button>
-                <p className="dish-modal-meta">{(activeDish.restaurantMeta || "").split(" • ")[0]}</p>
+                {activeDishMatchedRestaurant ? (
+                  <button
+                    className="dish-modal-restaurant dish-modal-restaurant-link"
+                    type="button"
+                    onClick={() => openRestaurant(activeDishMatchedRestaurant)}
+                  >
+                    {activeDish.restaurant}
+                  </button>
+                ) : (
+                  <p className="dish-modal-restaurant">{activeDish.restaurant}</p>
+                )}
+                {(() => {
+                  const meta = (activeDish.restaurantMeta || "").split(" • ")[0].trim();
+                  const isDuplicateOfName = meta.toLowerCase() === String(activeDish.restaurant || "").trim().toLowerCase();
+                  return meta && !isDuplicateOfName ? <p className="dish-modal-meta">{meta}</p> : null;
+                })()}
               </div>
 
             </div>
 
-            <p className="dish-modal-description">
-              Compare this dish from the same restaurant across supported platforms, or cook it at home.
+            <div
+              className={`dish-modal-ai-label ${activeDishDescriptionSource === "ai" ? "" : "is-fallback"}`}
+            >
+              {activeDishDescriptionSource === "error"
+                ? "DISH NOTE · AI UNAVAILABLE"
+                : activeDishDescriptionSource === "fallback"
+                ? "DISH NOTE"
+                : "AI DISH NOTE"}
+            </div>
+            <p className={`dish-modal-description ${activeDishDescriptionLoading ? "is-loading" : ""}`}>
+              {activeDishDescription ||
+                (activeDishDescriptionLoading
+                  ? "Kiku is preparing a quick description for this dish…"
+                  : "A description isn't available for this dish right now.")}
             </p>
 
-            <div className="dish-modal-compare">
-<<<<<<< HEAD
-              {(["swiggy", "zomato"]).map((provider) => {
-                const offer = liveComparison?.offers?.find((item) => item.platform === provider);
-                const label = provider === "swiggy" ? "Swiggy" : "Zomato";
-                return (
-                  <div className={`dish-modal-provider ${provider}`} key={provider}>
-                    <div className="provider-heading"><span className="provider-mark" aria-hidden="true">{provider === "swiggy" ? "S" : "z"}</span><strong>{label}</strong></div>
-                    <div className="provider-price">{offer?.price != null ? `₹${Math.round(offer.price)}` : "—"}</div>
-                    <div className="provider-lines">
-                      <div><span>Dish</span><strong>{offer?.dishName || activeDish.name}</strong></div>
-                      <div><span>Price</span><strong>{offer?.price != null ? `₹${Math.round(offer.price)}` : "Not available"}</strong></div>
-                      <div><span>Listed</span><strong>{offer?.listed ? "Yes" : "No current listing"}</strong></div>
-                    </div>
-                    {offer?.restaurantUrl && <button className="provider-order" type="button" onClick={() => { void api.activity({ type: "order_link_open", entityType: "dish", entityId: activeDish.name, metadata: { provider } }).catch(() => {}); window.open(offer.restaurantUrl, "_blank", "noopener,noreferrer"); }}>Open on {label}</button>}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="dish-modal-comparison-alert" role="note">
-              <span aria-hidden="true">ⓘ</span>
-              <span>Prices shown do not include tax, service/platform fees, or delivery charges. Those are calculated by each platform based on your location.</span>
-            </div>
-
-            {liveComparison?.cheapestPlatform && liveComparison.offers.some((offer) => offer.price != null) && (
-              <div className="dish-modal-savings"><span aria-hidden="true">✓</span><strong>{liveComparison.cheapestPlatform === "swiggy" ? "Swiggy" : "Zomato"} currently lists the lower dish price.</strong></div>
-            )}
-
-            {liveComparison?.warnings?.length > 0 && (
-              <div className="dish-modal-note">{liveComparison.warnings[0]}</div>
-            )}
-            {liveComparison && (getKikuPreferences().dietary.length || getKikuPreferences().allergies.length) && !liveComparison.offers.length && (
-              <div className="dish-modal-note">No provider listing is shown because Kiku could not verify the selected dietary/allergen requirements. Kiku does not infer safety from the dish name.</div>
-            )}
-
-            <div className="dish-modal-note">
-              {comparisonStatus === "loading" && "Checking live dish prices…"}
-              {comparisonStatus === "live" && "Prices fetched live just now and may vary."}
-              {comparisonStatus === "fallback" && "Live prices are unavailable right now. Kiku is not substituting invented or hard-coded provider prices."}
-              {comparisonStatus === "idle" && "Live prices are checked when you open a dish."}
-=======
-              {[
-                ["Swiggy", activeDish.comparison.swiggy, "swiggy"],
-                ["Zomato", activeDish.comparison.zomato, "zomato"],
-              ].map(([provider, offer, className]) => (
-                <div className={`dish-modal-provider ${className}`} key={provider}>
-                  <div className="provider-heading">
-                    <span className="provider-mark" aria-hidden="true">
-                      {provider === "Swiggy" ? "S" : "z"}
-                    </span>
-                    <strong>{provider}</strong>
-                  </div>
-
-                  <div className="provider-price">{offer.item}</div>
-
-                  <div className="provider-lines">
-                    <div><span>Item Price</span><strong>{offer.item}</strong></div>
-                    <div><span>Delivery Fee</span><strong>{offer.delivery}</strong></div>
-                    <div><span>Platform Fee</span><strong>{offer.platform}</strong></div>
-                  </div>
-
-                  <div className="provider-total">
-                    <span>Total</span>
-                    <strong>{offer.total}</strong>
-                  </div>
-
-                  <div className="provider-eta">
-                    <span>ETA</span>
-                    <strong>◷ {offer.eta}</strong>
-                  </div>
-
-                  <button className="provider-order" type="button">
-                    Order on {provider}
-                  </button>
-                </div>
+            <div className="dish-provider-availability" role="group" aria-label="Ordering availability by platform">
+              {activeDishProviderListings.map((entry) => (
+                <span
+                  key={entry.platform}
+                  className={`dish-provider-chip ${entry.url ? "is-live" : "is-unavailable"}`}
+                >
+                  {capitalizeWord(entry.platform)}
+                  {entry.url && Number.isFinite(entry.priceValue) ? ` · ₹${entry.priceValue}` : ""}
+                </span>
               ))}
             </div>
 
-            <div className="dish-modal-savings">
-              <span aria-hidden="true">✓</span>
-              <strong>
-                You save ₹{Math.max(0, Number(activeDish.comparison.swiggy.total.replace("₹", "")) - Number(activeDish.comparison.zomato.total.replace("₹", "")))}
-                {" "}on Zomato!
-              </strong>
-            </div>
+            <button
+              className="dish-modal-order-button"
+              type="button"
+              disabled={!activeDishOrderTarget?.url || orderLinkOpening}
+              onClick={() => {
+                const url = activeDishOrderTarget?.url;
+                if (!url || orderLinkOpening) return;
+                setOrderLinkOpening(true);
+                if (isLoggedIn) void api.activity({ type: "order_link_open", entityType: "dish", entityId: activeDish.name, metadata: { restaurant: activeDish.restaurant, platform: activeDishOrderTarget.platform } }).catch(() => {});
+                window.open(url, "_blank", "noopener,noreferrer");
+                window.setTimeout(() => setOrderLinkOpening(false), 900);
+              }}
+            >
+              {orderLinkOpening
+                ? "Opening…"
+                : activeDishOrderTarget?.url
+                ? `Order on ${capitalizeWord(activeDishOrderTarget.platform)}${
+                    Number.isFinite(activeDishOrderTarget.priceValue) ? ` · ₹${activeDishOrderTarget.priceValue}` : ""
+                  }`
+                : "No live ordering link yet"}
+            </button>
+
+            {activeDishOrderTarget?.url && (
+              <p className="dish-modal-saving-line">Kiku picked the lowest verified price across platforms.</p>
+            )}
+
+            <p className="dish-modal-price-disclaimer">
+              Prices shown do not include tax, service/platform fees, or delivery charges.
+            </p>
 
             <div className="dish-modal-note">
-              Prices are fetched in real-time and may vary.
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+              Kiku keeps this page focused on one dish, using live provider links only where a verified listing exists.
             </div>
 
             <div className="similar-dishes">
@@ -3326,7 +2912,25 @@ export default function App() {
                       onClick={() => openDish(dish, { pushHistory: true })}
                     >
                       <div className={`similar-dish-art ${dish.artClass}`}>
-                        <span aria-hidden="true">{dish.art}</span>
+                        {getDishImage(dish) ? (
+                          <>
+                            <img
+                              className="similar-dish-photo"
+                              src={getDishImage(dish)}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              onError={(event) => {
+                                (event.currentTarget as HTMLElement).hidden = true;
+                                const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                                if (fallback) fallback.hidden = false;
+                              }}
+                            />
+                            <span className="similar-dish-photo-fallback" aria-hidden="true" hidden>{dish.art}</span>
+                          </>
+                        ) : (
+                          <span aria-hidden="true">{dish.art}</span>
+                        )}
                       </div>
                       <strong>{dish.name}</strong>
                       <span>{dish.restaurant}</span>
@@ -3371,7 +2975,28 @@ export default function App() {
 
             <div className="restaurant-modal-hero">
               <div className="restaurant-modal-art dish-art-rose" aria-hidden="true">
-                <span className="restaurant-modal-emoji">🍽️</span>
+                {(() => {
+                  const restaurantImage = activeRestaurant?.dishes?.map?.(getDishImage).find(Boolean) || null;
+                  return restaurantImage ? (
+                    <>
+                      <img
+                        className="restaurant-modal-photo"
+                        src={restaurantImage}
+                        alt=""
+                        loading="eager"
+                        decoding="async"
+                        onError={(event) => {
+                          (event.currentTarget as HTMLElement).hidden = true;
+                          const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                          if (fallback) fallback.hidden = false;
+                        }}
+                      />
+                      <span className="restaurant-modal-emoji restaurant-photo-fallback" hidden>🍽️</span>
+                    </>
+                  ) : (
+                    <span className="restaurant-modal-emoji">🍽️</span>
+                  );
+                })()}
               </div>
               <div className="restaurant-modal-title">
                 <span className="eyebrow">RESTAURANT</span>
@@ -3403,7 +3028,6 @@ export default function App() {
               <button
                 className={`veg-icon-toggle ${vegOnly ? "active" : ""}`}
                 type="button"
-<<<<<<< HEAD
                 aria-label={vegOnly ? "Show all dishes" : "Show verified vegetarian dishes only"}
                 aria-pressed={vegOnly}
                 onClick={() => setVegOnly((value) => !value)}
@@ -3421,31 +3045,18 @@ export default function App() {
               >
                 <span aria-hidden="true">✓</span> SAFE
               </button>
-=======
-                aria-label={vegOnly ? "Show all dishes" : "Show vegetarian dishes only"}
-                aria-pressed={vegOnly}
-                onClick={() => setVegOnly((value) => !value)}
-                title={vegOnly ? "Show all dishes" : "Vegetarian only"}
-              >
-                <span className="veg-symbol" aria-hidden="true"><span /></span>
-              </button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
             </div>
 
             <div className="restaurant-menu-list">
               {activeRestaurant.dishes
-<<<<<<< HEAD
                 .filter((dish) => {
                   const prefs = getKikuPreferences();
                   return matchesDietaryFilter(dish, {
                     dietary: vegOnly ? ["vegetarian"] : [],
                     allergies: prefs.allergies,
-                    allergenFreeOnly: allergenSafeOnly && prefs.allergies.length === 0,
+                    allergenFreeOnly: allergenSafeOnly,
                   });
                 })
-=======
-                .filter((dish) => !vegOnly || dish.tags.some((tag) => /vegetarian|veg/i.test(tag)))
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 .filter((dish) => {
                   const query = restaurantSearch.trim().toLowerCase();
                   if (!query) return true;
@@ -3462,7 +3073,25 @@ export default function App() {
                       onClick={() => openDish(dish, { fromRestaurant: activeRestaurant })}
                       aria-label={`Open ${dish.name} details`}
                     >
-                      <span aria-hidden="true">{dish.art}</span>
+                      {getDishImage(dish) ? (
+                        <>
+                          <img
+                            className="restaurant-menu-photo"
+                            src={getDishImage(dish)}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            onError={(event) => {
+                              (event.currentTarget as HTMLElement).hidden = true;
+                              const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                              if (fallback) fallback.hidden = false;
+                            }}
+                          />
+                          <span aria-hidden="true" className="restaurant-photo-fallback" hidden>{dish.art}</span>
+                        </>
+                      ) : (
+                        <span aria-hidden="true">{dish.art}</span>
+                      )}
                     </button>
                     <div className="restaurant-menu-copy">
                       <button
@@ -3489,26 +3118,22 @@ export default function App() {
                       >
                         {likedDishes.has(dish.name) ? "♥" : "♡"}
                       </button>
-                      <button className="restaurant-compare" type="button" onClick={() => openDish(dish)}>
-                        Compare
+                      <button className="restaurant-view-dish" type="button" onClick={() => openDish(dish)}>
+                        View dish
                       </button>
                     </div>
                   </article>
                 ))}
 
               {activeRestaurant.dishes
-<<<<<<< HEAD
                 .filter((dish) => {
                   const prefs = getKikuPreferences();
                   return matchesDietaryFilter(dish, {
                     dietary: vegOnly ? ["vegetarian"] : [],
                     allergies: prefs.allergies,
-                    allergenFreeOnly: allergenSafeOnly && prefs.allergies.length === 0,
+                    allergenFreeOnly: allergenSafeOnly,
                   });
                 })
-=======
-                .filter((dish) => !vegOnly || dish.tags.some((tag) => /vegetarian|veg/i.test(tag)))
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 .filter((dish) => {
                   const query = restaurantSearch.trim().toLowerCase();
                   if (!query) return true;
@@ -3518,11 +3143,7 @@ export default function App() {
                     .includes(query);
                 }).length === 0 && (
                   <div className="restaurant-empty-state">
-<<<<<<< HEAD
                     {restaurantSearch.trim() ? "No dishes match your search." : "No vegetarian dishes are available right now."}
-=======
-                    {restaurantSearch.trim() ? "No dishes match your search." : "No vegetarian dishes are available in this sample menu."}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                   </div>
                 )}
             </div>
@@ -3533,7 +3154,6 @@ export default function App() {
       {activeRecipe && (
         <div className="kiku-fullpage-backdrop recipe-backdrop" role="presentation">
           <div className="recipe-page" role="dialog" aria-modal="true" aria-labelledby="recipe-page-title">
-<<<<<<< HEAD
             <div className={`recipe-hero ${activeRecipe.recipe.accentClass || "recipe-accent-rose"}`}>
               {activeRecipe.recipe.image ? (
                 <img src={activeRecipe.recipe.image} alt="" />
@@ -3549,20 +3169,6 @@ export default function App() {
                 {activeRecipe.recipe.sourceUrl ? (
                   <a href={activeRecipe.recipe.sourceUrl} target="_blank" rel="noreferrer" className="recipe-icon-button recipe-source-button" aria-label="Open original recipe source">↗</a>
                 ) : null}
-=======
-            <div className="recipe-hero">
-              <img
-                src={activeRecipe.dish.name === "Butter Chicken"
-                  ? "/butter-chicken-hero.jpg"
-                  : "/butter-chicken-hero.jpg"}
-                alt=""
-              />
-              <div className="recipe-hero-actions">
-                <button type="button" className="recipe-icon-button" onClick={closeRecipe} aria-label="Back">
-                  &lt;
-                </button>
-                <span className="recipe-hero-spacer" />
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <button
                   type="button"
                   className={`recipe-icon-button ${savedRecipes.has(activeRecipe.dish.name) ? "saved" : ""}`}
@@ -3576,7 +3182,6 @@ export default function App() {
 
             <div className="recipe-body">
               <div className="recipe-title-row">
-<<<<<<< HEAD
                 <div className="recipe-title-copy">
                   <span className="recipe-eyebrow">{activeRecipe.recipe.cuisine || activeRecipe.dish.restaurantMeta || "KIKU RECIPE"}</span>
                   <h1 id="recipe-page-title">{activeRecipe.dish.name}</h1>
@@ -3653,39 +3258,11 @@ export default function App() {
                     onClick={() => setRecipeTab(value)}
                   >
                     {label}
-=======
-                <div>
-                  <h1 id="recipe-page-title">{activeRecipe.dish.name}</h1>
-                  <div className="recipe-stat-row">
-                    <span>☆ {activeRecipe.recipe.rating}</span>
-                    <span>◷ {activeRecipe.recipe.time}</span>
-                    <span>♧ {activeRecipe.recipe.servings}</span>
-                  </div>
-                </div>
-                <div className="recipe-quick-actions">
-                  <button type="button" aria-label="Chef mode">♨</button>
-                  <button type="button" aria-label="Recipe video">▶</button>
-                </div>
-              </div>
-
-              <p className="recipe-description">{activeRecipe.recipe.description}</p>
-
-              <div className="recipe-tabs" role="tablist">
-                {["Ingredients", "Steps", "Nutrition", "Tips"].map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    className={recipeTab === tab ? "active" : ""}
-                    onClick={() => setRecipeTab(tab)}
-                  >
-                    {tab}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                   </button>
                 ))}
               </div>
 
               {recipeTab === "Ingredients" && (
-<<<<<<< HEAD
                 <div className="recipe-detail-panel">
                   <div className="recipe-panel-heading">
                     <div>
@@ -3703,23 +3280,10 @@ export default function App() {
                       </div>
                     ))}
                   </div>
-=======
-                <div className="recipe-ingredient-panel">
-                  {activeRecipe.recipe.ingredients.map(([name, amount], index) => (
-                    <div className="recipe-ingredient-row" key={name}>
-                      <span>{name}</span>
-                      <span className="ingredient-amount">{amount}</span>
-                      <button type="button" onClick={() => adjustIngredient(index, -1)} aria-label={`Decrease ${name}`}>−</button>
-                      <strong>{ingredientQuantities[index] || 1}</strong>
-                      <button type="button" onClick={() => adjustIngredient(index, 1)} aria-label={`Increase ${name}`}>+</button>
-                    </div>
-                  ))}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 </div>
               )}
 
               {recipeTab === "Steps" && (
-<<<<<<< HEAD
                 <div className="recipe-detail-panel">
                   <div className="recipe-panel-heading">
                     <div>
@@ -3742,20 +3306,10 @@ export default function App() {
                       </button>
                     ))}
                   </div>
-=======
-                <div className="recipe-info-panel">
-                  {activeRecipe.recipe.steps.map((step, index) => (
-                    <button key={step.name} type="button" onClick={() => setCookingStep(index)} className="recipe-step-row">
-                      <span>{index + 1}</span>
-                      <span><strong>{step.name}</strong>{step.instruction}</span>
-                    </button>
-                  ))}
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 </div>
               )}
 
               {recipeTab === "Nutrition" && (
-<<<<<<< HEAD
                 <div className="recipe-detail-panel">
                   <div className="recipe-panel-heading">
                     <div>
@@ -3775,18 +3329,10 @@ export default function App() {
                       <div><strong>Kiku couldn't verify nutrition data for this recipe.</strong><p>Nutrition is shown only when a trusted source provides it. Kiku won't invent calorie or nutrient values.</p></div>
                     </div>
                   )}
-=======
-                <div className="recipe-info-panel recipe-nutrition">
-                  <span><strong>Protein</strong><strong>32 g</strong></span>
-                  <span><strong>Calories</strong><strong>520 kcal</strong></span>
-                  <span><strong>Carbs</strong><strong>28 g</strong></span>
-                  <span><strong>Fat</strong><strong>27 g</strong></span>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 </div>
               )}
 
               {recipeTab === "Tips" && (
-<<<<<<< HEAD
                 <div className="recipe-detail-panel">
                   <div className="recipe-panel-heading">
                     <div>
@@ -3824,25 +3370,6 @@ export default function App() {
                 </button>
                 <button type="button" className="recipe-start-button" onClick={() => startCooking(0)} disabled={!activeRecipe.recipe.steps?.length}>
                   {activeRecipe.recipe.steps?.length ? "Start Cooking" : "Steps unavailable"}
-=======
-                <div className="recipe-info-panel">
-                  {activeRecipe.recipe.steps.slice(0, 4).map((step) => (
-                    <p key={step.name}><strong>{step.name}:</strong> {step.tip}</p>
-                  ))}
-                </div>
-              )}
-
-              <div className="recipe-bottom-actions">
-                <button
-                  type="button"
-                  className="recipe-save-button"
-                  onClick={() => toggleRecipeSaved(activeRecipe.dish.name)}
-                >
-                  ♧ {savedRecipes.has(activeRecipe.dish.name) ? "Saved Recipe" : "Save Recipe"}
-                </button>
-                <button type="button" className="recipe-start-button" onClick={startCooking}>
-                  Start Cooking
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 </button>
               </div>
             </div>
@@ -3852,7 +3379,6 @@ export default function App() {
 
       {activeCooking && (
         <div className="kiku-fullpage-backdrop cooking-backdrop" role="presentation">
-<<<<<<< HEAD
           <div className={`cooking-page ${activeCooking.recipe.accentClass || "recipe-accent-rose"}`} role="dialog" aria-modal="true" aria-labelledby="cooking-title">
             <div
               className="cooking-background"
@@ -3939,15 +3465,19 @@ export default function App() {
                 </section>
               </div>
 
-              <section className="cooking-cue-card">
-                <span className="cooking-cue-icon">◌</span>
-                <div><strong>Look for</strong><p>{activeCooking.recipe.steps[cookingStep].cue || activeCooking.recipe.steps[cookingStep].tip}</p></div>
-              </section>
+              {(activeCooking.recipe.steps[cookingStep].cue) && (
+                <section className="cooking-cue-card">
+                  <span className="cooking-cue-icon">◌</span>
+                  <div><strong>Look for</strong><p>{activeCooking.recipe.steps[cookingStep].cue}</p></div>
+                </section>
+              )}
 
-              <section className="cooking-tip">
-                <span className="cooking-tip-icon">♡</span>
-                <div><strong>Pro Tip</strong><p>{activeCooking.recipe.steps[cookingStep].tip}</p></div>
-              </section>
+              {(activeCooking.recipe.steps[cookingStep].tip) && (
+                <section className="cooking-tip">
+                  <span className="cooking-tip-icon">♡</span>
+                  <div><strong>Pro Tip</strong><p>{activeCooking.recipe.steps[cookingStep].tip}</p></div>
+                </section>
+              )}
 
               <div className="cooking-help-row">
                 <button type="button" onClick={() => { openAssistant(activeCooking); setAssistantQuery(`I am cooking ${activeCooking.dish?.name || "this recipe"}, step ${cookingStep + 1}: ${activeCooking.recipe.steps[cookingStep].instruction}. Help me with this step.`); }}>
@@ -3964,129 +3494,12 @@ export default function App() {
                 {activeCooking.recipe.steps.map((step, index) => (
                   <button type="button" key={`${step.name}-${index}`} ref={(el) => { cookingProgressItemRefs.current[index] = el; }} className={`cooking-progress-item ${index < cookingStep ? "done" : index === cookingStep ? "current" : ""}`} onClick={() => goToCookingStep(index)}>
                     <span>{index < cookingStep ? "✓" : index + 1}</span><small>{step.name}</small>
-=======
-          <div className="cooking-page" role="dialog" aria-modal="true" aria-labelledby="cooking-title">
-            <div className="cooking-background" aria-hidden="true" />
-            <div className="cooking-topbar">
-              <button
-                type="button"
-                className="cooking-icon-button cooking-back-button"
-                onClick={backToRecipeFromCooking}
-                aria-label="Back to recipe"
-              >
-                &lt;
-              </button>
-
-              <button
-                type="button"
-                className="cooking-icon-button cooking-exit-button"
-                onClick={closeCooking}
-                aria-label="Exit cooking mode"
-              >
-                ×
-              </button>
-            </div>
-
-            <div
-              className={`cooking-content ${
-                activeCooking.recipe.steps[cookingStep]?.duration ? "has-timer" : "no-timer"
-              }`}
-              ref={cookingStepRef}
-            >
-              <span className="cooking-step-count">Step {cookingStep + 1} of {activeCooking.recipe.steps.length}</span>
-              <h1 id="cooking-title">{activeCooking.recipe.steps[cookingStep].instruction}</h1>
-
-              <div className="cooking-workspace">
-                <div className="cooking-grocery-list" aria-label="Ingredients checklist">
-                  <div className="cooking-grocery-head">
-                    <div>
-                      <span>GROCERY LIST</span>
-                      <strong>Ingredients you need</strong>
-                    </div>
-                    <small>{getCookingIngredientState().filter((item) => !item.used).length} left</small>
-                  </div>
-
-                  <div className="cooking-grocery-items">
-                    {getCookingIngredientState().map((item) => (
-                      <div
-                        className={`cooking-grocery-item ${
-                          item.current ? "current" : ""
-                        } ${item.used ? "used" : ""}`}
-                        key={item.name}
-                      >
-                        <span className="cooking-grocery-check" aria-hidden="true">
-                          {item.used ? "✓" : item.current ? "•" : ""}
-                        </span>
-                        <span className="cooking-grocery-name">{item.name}</span>
-                        <span className="cooking-grocery-amount">{item.amount}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div
-                  className={`cooking-timer-area ${
-                    activeCooking.recipe.steps[cookingStep].duration > 0 ? "has-step-timer" : "no-step-timer"
-                  }`}
-                >
-                  {activeCooking.recipe.steps[cookingStep].duration > 0 && (
-                    <button
-                      className={`cooking-timer ${timerRunning ? "running" : ""}`}
-                      type="button"
-                      onClick={startCurrentTimer}
-                      disabled={timerRunning}
-                      aria-label={timerRunning ? "Timer running" : "Start timer"}
-                    >
-                      <span>{formatTimer(timerRemaining || activeCooking.recipe.steps[cookingStep].duration)}</span>
-                      <strong>{timerRunning ? "Running" : "Start Timer"}</strong>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="cooking-navigation">
-                <button type="button" onClick={previousCookingStep} disabled={cookingStep === 0}>
-                  <span>←</span>
-                  <small>Previous</small>
-                </button>
-
-                <button type="button" onClick={nextCookingStep}>
-                  <span>→</span>
-                  <small>{cookingStep === activeCooking.recipe.steps.length - 1 ? "Finish" : "Next"}</small>
-                </button>
-              </div>
-
-              <div className="cooking-tip">
-                <span className="cooking-tip-icon">♡</span>
-                <div>
-                  <strong>Pro Tip</strong>
-                  <p>{activeCooking.recipe.steps[cookingStep].tip}</p>
-                </div>
-              </div>
-
-              <div className="cooking-progress">
-                {activeCooking.recipe.steps.map((step, index) => (
-                  <button
-                    type="button"
-                    key={step.name}
-                    ref={(el) => {
-                      cookingProgressItemRefs.current[index] = el;
-                    }}
-                    className={`cooking-progress-item ${
-                      index < cookingStep ? "done" : index === cookingStep ? "current" : ""
-                    }`}
-                    onClick={() => goToCookingStep(index)}
-                  >
-                    <span>{index < cookingStep ? "✓" : index + 1}</span>
-                    <small>{step.name}</small>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                   </button>
                 ))}
               </div>
             </div>
 
             {stepCompletePopup && (
-<<<<<<< HEAD
               <div className="step-complete-popup" role="dialog" aria-modal="true" aria-labelledby="step-complete-title">
                 <div className="step-complete-card">
                   <span className="step-complete-check">✓</span>
@@ -4097,14 +3510,6 @@ export default function App() {
                     <button type="button" className="step-complete-primary" onClick={() => { setStepCompletePopup(false); nextCookingStep(); }}>Continue to next step</button>
                   </div>
                   <button type="button" className="step-complete-close" onClick={() => setStepCompletePopup(false)} aria-label="Close timer message">×</button>
-=======
-              <div className="step-complete-popup" role="status" aria-live="polite">
-                <div className="step-complete-card">
-                  <span className="step-complete-check">✓</span>
-                  <strong>Step complete</strong>
-                  <p>Nice work. Moving to the next step automatically.</p>
-                  <button type="button" className="step-complete-close" onClick={() => setStepCompletePopup(false)} aria-label="Close completion message">×</button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 </div>
               </div>
             )}
@@ -4116,12 +3521,11 @@ export default function App() {
         <div className="assistant-overlay" role="dialog" aria-modal="true" aria-label="Kiku Assistant" onMouseDown={(event) => { if (event.target === event.currentTarget) closeAssistant(); }}>
           <div className="assistant-modal">
             <div className="assistant-modal-header">
-<<<<<<< HEAD
               <div className="assistant-brand"><div className="assistant-avatar" aria-hidden="true">✿</div><div><strong>Kiku</strong><span>Food for every mood.</span></div></div>
               <div className="assistant-modal-actions"><button type="button" className="assistant-icon-button" onClick={closeAssistant} aria-label="Close assistant">×</button></div>
             </div>
 
-            <div className="assistant-message assistant-message-bot">Hi! I’m Kiku. Ask me about food, recipes, restaurants, or price comparisons.</div>
+            <div className="assistant-message assistant-message-bot">Hi! I’m Kiku. Ask me about food, recipes, restaurants, or what to try next.</div>
             {assistantMessages.map((message, index) => (
               <div key={`${message.role}-${index}`}>
                 <div className={`assistant-message ${message.role === "user" ? "assistant-message-user" : "assistant-message-bot"}`}>{message.content}</div>
@@ -4150,13 +3554,17 @@ export default function App() {
                       const card = (
                         <>
                           <div className={`assistant-dish-art ${dish.artClass || ""}`}>
-                            {dish.image ? <img src={dish.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <span>{dish.art}</span>}
+                            {getDishImage(dish) ? (
+                              <img src={getDishImage(dish)} alt="" loading="lazy" decoding="async" />
+                            ) : (
+                              <span>{dish.art}</span>
+                            )}
                           </div>
                           <div className="assistant-dish-copy">
                             <strong>{dish.name}</strong>
                             <span>{dish.restaurant || dish.descriptor || "Kiku recommendation"}</span>
                             <b>{dish.price}</b>
-                            {listingUrl ? <span className="assistant-external-link">View original listing ↗</span> : <span className="assistant-card-link-hint">Open in Kiku</span>}
+                            {listingUrl ? <span className="assistant-external-link">View restaurant menu ↗</span> : <span className="assistant-card-link-hint">Open in Kiku</span>}
                           </div>
                         </>
                       );
@@ -4200,45 +3608,24 @@ export default function App() {
             {!isLoggedIn && assistantMatches.length > 0 && (
               <div className="assistant-recommendation-block">
                 <div className="assistant-message assistant-message-bot">Sign in to make Kiku's answers use your saved preferences and history.</div>
-=======
-              <div className="assistant-brand">
-                <div className="assistant-avatar" aria-hidden="true">✿</div>
-                <div>
-                  <strong>Kiku</strong>
-                  <span>Food for every mood.</span>
-                </div>
-              </div>
-              <div className="assistant-modal-actions">
-                <button type="button" className="assistant-icon-button" onClick={closeAssistant} aria-label="Close assistant">×</button>
-              </div>
-            </div>
-
-            <div className="assistant-message assistant-message-bot">Hi! I’m Kiku. What are you craving today?</div>
-            {assistantMatches.length > 0 && (
-              <div className="assistant-recommendation-block">
-                <div className="assistant-message assistant-message-bot">{assistantQuery.trim() ? "Here are a few matches for you:" : "Here are a few ideas to start with:"}</div>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
                 <div className="assistant-dish-grid">
                   {assistantMatches.map((dish) => (
                     <button key={dish.name} type="button" className="assistant-dish-card" onClick={() => { closeAssistant(); openDish(dish); }}>
-                      <div className={`assistant-dish-art ${dish.artClass || ""}`}><span>{dish.art}</span></div>
-<<<<<<< HEAD
-                      <div className="assistant-dish-copy"><strong>{dish.name}</strong><span>{dish.restaurant}</span><b>{dish.price}</b></div>
-=======
-                      <div className="assistant-dish-copy">
-                        <strong>{dish.name}</strong>
-                        <span>{dish.restaurant}</span>
-                        <b>{dish.price}</b>
+                      <div className={`assistant-dish-art ${dish.artClass || ""}`}>
+                        {getDishImage(dish) ? (
+                          <img src={getDishImage(dish)} alt="" loading="lazy" decoding="async" />
+                        ) : (
+                          <span>{dish.art}</span>
+                        )}
                       </div>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+                      <div className="assistant-dish-copy"><strong>{dish.name}</strong><span>{dish.restaurant}</span><b>{dish.price}</b></div>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-<<<<<<< HEAD
-            <div className="assistant-suggestions"><div className="assistant-suggestions-heading">Try these <span aria-hidden="true">›</span></div><div className="assistant-tags">{["Comfort food", "Healthy", "Budget friendly", "Surprise me"].map((tag) => <button type="button" key={tag} onClick={() => setAssistantQuery(tag === "Surprise me" ? "" : tag)}>{tag}</button>)}</div></div>
+            <div className="assistant-suggestions"><div className="assistant-suggestions-heading">Try these <span aria-hidden="true">›</span></div><div className="assistant-tags">{["Comfort food", "Healthy", "Budget friendly", "Surprise me"].map((tag) => <button type="button" key={tag} onClick={() => setAssistantQuery(tag)}>{tag}</button>)}</div></div>
 
             <form className="assistant-input-row" onSubmit={submitAssistant}>
               <input value={assistantQuery} onChange={(event) => setAssistantQuery(event.target.value)} placeholder={isLoggedIn ? "Ask Kiku anything about food…" : "Tell me what you're craving…"} aria-label="Ask Kiku" />
@@ -4265,27 +3652,6 @@ export default function App() {
                 <button type="button" className="recipe-save-button" onClick={() => setRecipeSubstitutionModal(null)}>Cancel</button>
                 <button type="submit" className="recipe-start-button" disabled={!recipeSubstitutionText.trim() || recipeSubstitutionBusy}>{recipeSubstitutionBusy ? "Updating…" : "Apply substitution"}</button>
               </div>
-=======
-            <div className="assistant-suggestions">
-              <div className="assistant-suggestions-heading">Try these <span aria-hidden="true">›</span></div>
-              <div className="assistant-tags">
-                {["Comfort food", "Healthy", "Budget friendly", "Surprise me"].map((tag) => (
-                  <button type="button" key={tag} onClick={() => setAssistantQuery(tag === "Surprise me" ? "" : tag)}>
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <form className="assistant-input-row" onSubmit={(event) => event.preventDefault()}>
-              <input
-                value={assistantQuery}
-                onChange={(event) => setAssistantQuery(event.target.value)}
-                placeholder="Tell me what you're craving…"
-                aria-label="Tell Kiku what you are craving"
-              />
-              <button type="submit" aria-label="Ask Kiku">→</button>
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
             </form>
           </div>
         </div>

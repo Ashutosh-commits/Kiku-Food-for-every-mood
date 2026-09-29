@@ -26,11 +26,13 @@ export function normalizeRegionSnapshot(payload = {}, pincode) {
   const dishes = Array.isArray(root?.dishes) ? root.dishes.filter((item) => item && typeof item === "object").slice(0, 1500).map((item) => ({ ...item, regionPincode: normalizedPincode })) : [];
   const restaurants = Array.isArray(root?.restaurants) ? root.restaurants.filter((item) => item && typeof item === "object").slice(0, 400).map((item) => ({ ...item, regionPincode: normalizedPincode })) : [];
   const offers = Array.isArray(root?.offers) ? root.offers.filter((item) => item && typeof item === "object").slice(0, 2500) : [];
+  const warnings = Array.isArray(root?.warnings) ? root.warnings.filter((item) => typeof item === "string").slice(0, 20) : [];
   return {
     pincode: normalizedPincode,
     dishes,
     restaurants,
     offers,
+    warnings,
     checkedAt: root?.checkedAt || root?.checked_at || new Date().toISOString(),
   };
 }

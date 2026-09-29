@@ -1,7 +1,5 @@
 export type MoodName = "Happy" | "Calm" | "Stressed" | "Tired" | "Excited" | "Cozy";
 
-<<<<<<< HEAD
-=======
 export interface DishComparison {
   item: string;
   delivery: string;
@@ -9,7 +7,7 @@ export interface DishComparison {
   total: string;
   eta: string;
 }
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
+
 
 export interface Dish {
   name: string;
@@ -22,7 +20,6 @@ export interface Dish {
   tags: string[];
   art: string;
   artClass: string;
-<<<<<<< HEAD
   dietaryTags?: string[];
   allergens?: string[];
   dietaryVerified?: boolean;
@@ -34,16 +31,17 @@ export interface Dish {
   orderOnlineAvailable?: boolean;
   cookAtHomeAvailable?: boolean;
   recipeAvailable?: boolean;
+  provider?: string | null;
+  restaurantUrl?: string | null;
+  listingUrl?: string | null;
+  orderUrl?: string | null;
+  priceValue?: number | null;
+  sourceDescription?: string | null;
+  categoryName?: string | null;
+  imageUrl?: string | null;
+  comparison?: { swiggy: DishComparison; zomato: DishComparison };
 }
 
-=======
-  comparison: { swiggy: DishComparison; zomato: DishComparison };
-  dietaryTags?: string[];
-}
-
-export type DishLike = Pick<Dish, "name" | "restaurant" | "descriptor" | "rating" | "time">;
-
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 export interface RecipeStep {
   name: string;
   instruction: string;
@@ -51,7 +49,6 @@ export interface RecipeStep {
   displayTime?: string;
   tip: string;
   ingredients: string[];
-<<<<<<< HEAD
   heat?: string | null;
   cue?: string | null;
   equipment?: string[];
@@ -91,19 +88,10 @@ export interface RecipeDetails {
   prepTime?: string | null;
   cookTime?: string | null;
   difficulty?: string | null;
-=======
-}
-
-export interface RecipeDetails {
-  cuisine?: string;
-  rating: string;
-  time: string;
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   servings: string;
   description: string;
   ingredients: [string, string][];
   steps: RecipeStep[];
-<<<<<<< HEAD
   equipment?: string[];
   substitutions?: RecipeSubstitution[];
   allergens?: string[];
@@ -119,8 +107,6 @@ export interface RecipeDetails {
   totalTimeMinutes?: number | null;
   servingsCount?: number | null;
   provenance?: RecipeProvenance | null;
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }
 
 export interface RecipeFeedItem {
@@ -141,13 +127,10 @@ export interface RecipeFeedItem {
   tags?: string[];
   url?: string;
   link?: string;
-<<<<<<< HEAD
   source?: string;
   details?: RecipeDetails | null;
   hasDetails?: boolean;
   dataQuality?: { requiredComplete: boolean; missingRequired: string[]; missingRecommended: string[] };
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }
 
 export interface KikuProfile {
@@ -160,14 +143,11 @@ export interface KikuProfile {
 export interface KikuPreferences {
   dietary: string[];
   allergies: string[];
-<<<<<<< HEAD
   cuisines?: string[];
   spiceLevel?: "mild" | "medium" | "spicy" | null;
   budgetMin?: number | null;
   budgetMax?: number | null;
   pincode?: string | null;
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }
 
 export interface SavedDish {
@@ -187,16 +167,10 @@ export interface SavedRecipe {
   rating?: string;
 }
 
-<<<<<<< HEAD
 export interface SavedRestaurant { name: string; cuisine?: string; }
 
 export interface KikuSavedItems {
   dishes: SavedDish[];
   recipes: SavedRecipe[];
   restaurants: SavedRestaurant[];
-=======
-export interface KikuSavedItems {
-  dishes: SavedDish[];
-  recipes: SavedRecipe[];
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 }

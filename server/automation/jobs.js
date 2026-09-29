@@ -6,7 +6,7 @@ function stableHash(value) {
   return createHash("sha256").update(String(value)).digest("hex").slice(0, 40);
 }
 
-export async function queueComparisonRefresh(body, delayMs = config.comparisonRefreshLeadMs) {
+export async function queueComparisonRefresh(body, delayMs = Math.max(5_000, config.comparisonCacheTtlMs - config.comparisonRefreshLeadMs)) {
   const key = JSON.stringify([body.location || "", body.pincode || "", String(body.restaurant || "").toLowerCase(), body.dish || ""]);
   const safeDelay = Math.max(5_000, delayMs);
   const runBucket = Math.floor((Date.now() + safeDelay) / safeDelay);

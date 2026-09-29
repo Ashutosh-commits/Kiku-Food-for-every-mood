@@ -2,20 +2,15 @@ export function scrollToSection(id: string): void {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-<<<<<<< HEAD
 export type StandaloneRoute = "login" | "signup" | "forgot-password" | "reset-password" | "verify-email" | null;
 export type PublicInfoRoute = "about" | "privacy" | "terms" | "accessibility" | "support" | "how-it-works" | null;
 
 export function getStandaloneRoute(): StandaloneRoute {
-=======
-export function getStandaloneRoute(): "login" | "signup" | null {
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   if (typeof window === "undefined") return null;
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   const hash = window.location.hash;
   if (path === "/login" || hash === "#login") return "login";
   if (path === "/signup" || hash === "#signup") return "signup";
-<<<<<<< HEAD
   if (path === "/forgot-password" || hash === "#forgot-password") return "forgot-password";
   if (path === "/reset-password" || hash === "#reset-password") return "reset-password";
   if (path === "/verify-email" || hash === "#verify-email") return "verify-email";
@@ -31,7 +26,5 @@ export function getPublicInfoRoute(): PublicInfoRoute {
   if (path === "/accessibility") return "accessibility";
   if (path === "/support") return "support";
   if (path === "/how-it-works") return "how-it-works";
-=======
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
   return null;
 }

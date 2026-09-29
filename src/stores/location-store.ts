@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { api } from "../services/api";
 import { isKikuAuthenticated } from "./profile-store";
 
@@ -14,23 +13,11 @@ export const setKikuPincodeFromServer = (pincode: string | null | undefined) => 
   currentPincode = pincode || "";
   try { if (currentPincode) localStorage.setItem(PIN_KEY, currentPincode); } catch { /* guest cache only */ }
   window.dispatchEvent(new CustomEvent("kiku-pincode-change", { detail: currentPincode }));
-=======
-const PIN_KEY = "kiku-pincode";
-const PROMPT_KEY = "kiku-pincode-prompt-dismissed";
-
-export const getKikuPincode = () => {
-  try {
-    return localStorage.getItem(PIN_KEY) || "";
-  } catch {
-    return "";
-  }
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 };
 
 export const saveKikuPincode = (pincode: string): string => {
   const normalized = String(pincode || "").replace(/\D/g, "").slice(0, 6);
   if (!/^\d{6}$/.test(normalized)) throw new Error("Enter a valid 6-digit PIN code.");
-<<<<<<< HEAD
   currentPincode = normalized;
   try { localStorage.setItem(PIN_KEY, normalized); localStorage.setItem(PROMPT_KEY, "true"); } catch { /* guest cache only */ }
   window.dispatchEvent(new CustomEvent("kiku-pincode-change", { detail: normalized }));
@@ -61,23 +48,4 @@ export const clearKikuPincode = () => {
     localStorage.removeItem(PROMPT_KEY);
   } catch { /* guest cache cleanup only */ }
   window.dispatchEvent(new CustomEvent("kiku-pincode-change", { detail: "" }));
-=======
-  localStorage.setItem(PIN_KEY, normalized);
-  localStorage.setItem(PROMPT_KEY, "true");
-  window.dispatchEvent(new CustomEvent("kiku-pincode-change", { detail: normalized }));
-  return normalized;
-};
-
-export const hasDismissedKikuPincodePrompt = () => {
-  try {
-    return localStorage.getItem(PROMPT_KEY) === "true";
-  } catch {
-    return false;
-  }
-};
-
-export const dismissKikuPincodePrompt = () => {
-  localStorage.setItem(PROMPT_KEY, "true");
-  window.dispatchEvent(new CustomEvent("kiku-pincode-prompt-dismissed"));
->>>>>>> ed1a51580aecb4ac5c7cc1166ba8a01e928604dc
 };
