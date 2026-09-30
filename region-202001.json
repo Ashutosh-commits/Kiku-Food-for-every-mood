@@ -1,0 +1,1042 @@
+﻿{
+    "pincode":  "202001",
+    "status":  "ready",
+    "checkedAt":  "2026-09-29T04:50:47.082836Z",
+    "updatedAt":  "2026-09-29T04:50:47.088Z",
+    "error":  null,
+    "warning":  "PIN 202001 resolved to Aligarh, Uttar Pradesh for provider targeting.",
+    "dishesCount":  27,
+    "restaurantsCount":  5,
+    "menuEnrichmentStatus":  "succeeded",
+    "menuEnrichmentLastAttemptAt":  "2026-09-29T04:50:47.088Z",
+    "warnings":  [
+                     "PIN 202001 resolved to Aligarh, Uttar Pradesh for provider targeting.",
+                     "Swiggy regional discovery found 5 restaurants and 41 menu items for PIN 202001."
+                 ],
+    "dishes":  [
+                   {
+                       "id":  "swiggy:ab91b96a91a51b65dc3f",
+                       "name":  "EVM Dragon McVeggie",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  286,
+                       "finalPrice":  286,
+                       "description":  null,
+                       "categoryName":  "Extra Value Meal Medium",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/de565b84-d2cb-4966-aa20-96a6b85df791_77ef8636-b143-446b-9e59-095dd877c2a8.png_compressed",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Extra Value Meal Medium"
+                                ],
+                       "dietaryTags":  [
+                                           "Extra Value Meal Medium"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082359Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:e7cafb4548ed92000956",
+                       "name":  "Med Dragon McChicken FIFA Meal",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  321,
+                       "finalPrice":  321,
+                       "description":  null,
+                       "categoryName":  "Extra Value Meal Medium",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/51e6d3c5-738d-40c8-afcb-2bf4bc0a1933_9687f4b8-0372-40c6-8f61-45fa64da1708.png_compressed",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Extra Value Meal Medium"
+                                ],
+                       "dietaryTags":  [
+                                           "Extra Value Meal Medium"
+                                       ],
+                       "isVegetarian":  false,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082406Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:c47ba79416fde89adb06",
+                       "name":  "EVM Cheesy Mushroom",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  415,
+                       "finalPrice":  415,
+                       "description":  null,
+                       "categoryName":  "Extra Value Meal Medium",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2025/12/11/ad956dd0-3a54-4721-875b-fcb3978e199e_b5aff320-9e6b-40a7-8a3e-2cdc44b0e8c8.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Extra Value Meal Medium"
+                                ],
+                       "dietaryTags":  [
+                                           "Extra Value Meal Medium"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082420Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:44b0fb759a65c73a82a2",
+                       "name":  "Large EVM Cheesy Mushroom",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  440,
+                       "finalPrice":  440,
+                       "description":  null,
+                       "categoryName":  "Extra Value Meal Large",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2025/12/11/fa9955b8-67ac-4966-8d99-4638b19711c2_201ffe55-01c8-40f4-963d-3e7442940d65.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Extra Value Meal Large"
+                                ],
+                       "dietaryTags":  [
+                                           "Extra Value Meal Large"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082472Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:109b89535fa7d0e8c49e",
+                       "name":  "Cheesy Mushroom",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  275,
+                       "finalPrice":  275,
+                       "description":  "Protein bun, with rich and crusty cheesy Mushroom patty, topped with Italian sauce served with Gherkin slices, Cheddar cheese patty and crisp iceberg lettuce.Serving Size: 220 gm I Calories 778.21 I Gluten: Yes I Milk Products: Yes I Soyabean Products: Yes",
+                       "categoryName":  "Signature Collection By McDonald\u0027s",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2025/12/11/96952440-3983-4e8d-bcef-018c3bb1904f_f510e6aa-2442-4ba9-bfa8-6dfecdb1cb90.png",
+                       "inStock":  true,
+                       "itemRating":  4.7,
+                       "itemRatingCount":  12,
+                       "tags":  [
+                                    "Signature Collection By McDonald\u0027s"
+                                ],
+                       "dietaryTags":  [
+                                           "Signature Collection By McDonald\u0027s"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082594Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:a7e67aac8a17c16a3f1e",
+                       "name":  "Cheesy Mushroom VM",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  384,
+                       "finalPrice":  384,
+                       "description":  null,
+                       "categoryName":  "Signature Collection By McDonald\u0027s",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2025/12/11/9039b8b8-7521-44fc-ae75-a302c48ce42e_260e2e87-e675-42ef-a168-f263fec96f11.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Signature Collection By McDonald\u0027s"
+                                ],
+                       "dietaryTags":  [
+                                           "Signature Collection By McDonald\u0027s"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082620Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:133e23cb2deded0d0b54",
+                       "name":  "Small Dragon McVeggie FIFA Meal",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  217,
+                       "finalPrice":  217,
+                       "description":  null,
+                       "categoryName":  "No Deal Like McDeal",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/ae6a56e0-b397-424d-922d-d932490a1b1c_0032edb0-4d1b-47d0-8e0c-681ac3fb2aeb.png_compressed",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "No Deal Like McDeal"
+                                ],
+                       "dietaryTags":  [
+                                           "No Deal Like McDeal"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082634Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:39623aeb93b5f5cdc113",
+                       "name":  "Small Dragon McChicken FIFA Meal",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  252,
+                       "finalPrice":  252,
+                       "description":  null,
+                       "categoryName":  "No Deal Like McDeal",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/f3077fa6-77e4-43d6-80bc-f6f0f43b2921_9833d026-0366-49ed-ac3d-767b5578de09.png_compressed",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "No Deal Like McDeal"
+                                ],
+                       "dietaryTags":  [
+                                           "No Deal Like McDeal"
+                                       ],
+                       "isVegetarian":  false,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082656Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:38d1050a7fa3988f912f",
+                       "name":  "McVeggie Dragon",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  148,
+                       "finalPrice":  148,
+                       "description":  "A patty made of potatoes, peas, carrots, beans, onions, red capsicum and a selection of Indian spices, topped with crispy lettuce, mayonnaise, packed into sesame toasted buns.Serving Size: 168 gm I Calories 402.05 I Gluten: Yes I Milk Products: Yes I Soyabean Products: Yes",
+                       "categoryName":  "Burgers",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/767a21dd-fd38-447d-82f6-1fafe9b86361_a7371170-d280-4de0-bf2f-29fecc7d914f.png_compressed",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Burgers"
+                                ],
+                       "dietaryTags":  [
+                                           "Burgers"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082679Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:1e998549863f5c8b0a87",
+                       "name":  "Honey Chilli Fries  (Med.)",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  148,
+                       "finalPrice":  148,
+                       "description":  "Serving Size: Medium I Calories 408.42 I Milk Products: Yes",
+                       "categoryName":  "Sides",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/fc0b2b7c-f8b8-4918-80ea-128473d23974_5b701ed3-dd0a-4ed4-8d4c-f120d942e1fb.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Sides"
+                                ],
+                       "dietaryTags":  [
+                                           "Sides"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082690Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:1eb6bcdda3e558c3403a",
+                       "name":  "Honey Chilli Fries (Reg.)",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  114,
+                       "finalPrice":  114,
+                       "description":  "Serving Size: Regular I Calories 289.91 I Milk Products: Yes",
+                       "categoryName":  "Sides",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/6/19/affad0ef-e57a-498c-aff6-35b719877e4b_cb356806-226c-4bbc-b021-e8999e53fa32.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Sides"
+                                ],
+                       "dietaryTags":  [
+                                           "Sides"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082700Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:5d876f2fc9d09794f482",
+                       "name":  "Lychee Sprite",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  114,
+                       "finalPrice":  114,
+                       "description":  "Serving Size: Small I Calories 215.12",
+                       "categoryName":  "Beverages",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/5/12/4e8ab89b-edca-4db1-a58a-e63b76f94cae_1ba2825a-6ff4-4877-a588-91a9d96ee3a9.png",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Beverages"
+                                ],
+                       "dietaryTags":  [
+                                           "Beverages"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082771Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:f2d650c72c23be800f36",
+                       "name":  "Coke® Zero Can",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  57.14,
+                       "finalPrice":  57.14,
+                       "description":  null,
+                       "categoryName":  "Beverages",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/yhdgibbugac4rkbo96li",
+                       "inStock":  true,
+                       "itemRating":  4.3,
+                       "itemRatingCount":  114,
+                       "tags":  [
+                                    "Beverages"
+                                ],
+                       "dietaryTags":  [
+                                           "Beverages"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082789Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:7cff1e66002d20ec447e",
+                       "name":  "Masala Chai",
+                       "restaurant":  "McDonald\u0027s",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                       "price":  63,
+                       "finalPrice":  63,
+                       "description":  "Masala chai is a smooth and spicy blend of natural tea extract, milk solids, black pepper, fennel, clove and cinnamon.",
+                       "categoryName":  "Beverages",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/lhfxdxo65xxvsc3ayrfs",
+                       "inStock":  true,
+                       "itemRating":  4.6,
+                       "itemRatingCount":  18,
+                       "tags":  [
+                                    "Beverages"
+                                ],
+                       "dietaryTags":  [
+                                           "Beverages"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082799Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:b8aa04bada0747497159",
+                       "name":  "German Black Forest Cake",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  549,
+                       "finalPrice":  549,
+                       "description":  "Serves 6 | A richer take on the classic — this eggless German Black Forest cake features moist chocolate sponge, whipped cream, juicy cherries, and dark chocolate curls for a bold, indulgent bite.",
+                       "categoryName":  "Recommended",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/7/28/441db6f0-78b7-4ab1-b960-1098b122a779_2c02596c-fd87-41ec-abc6-9a1160386606.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Recommended"
+                                ],
+                       "dietaryTags":  [
+                                           "Recommended"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082050Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:70540b2d238912c309dc",
+                       "name":  "Eggless Nutella Hazelnut Brownie",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  129,
+                       "finalPrice":  129,
+                       "description":  "Serves 1 | A classic eggless chocolate brownie blended with Nutella spread, topped with chunks of hazelnuts. The chocolate used is high-quality couverture chocolate.",
+                       "categoryName":  "Recommended",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/7/27/1a886e18-7d73-47ef-9cc2-0f545dda635c_6c72c483-5447-410b-9747-5362f56f9a83.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Recommended"
+                                ],
+                       "dietaryTags":  [
+                                           "Recommended"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082063Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:cf9493e0c80190ffb666",
+                       "name":  "Set of 2 Anniversary Poster Chocolate Jar Cakes",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  329,
+                       "finalPrice":  329,
+                       "description":  "Serves 2 | A set of 2 chocolate jar cakes topped with anniversary wishes",
+                       "categoryName":  "Recommended",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/calc3omdyyick4zzh6wr",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Recommended"
+                                ],
+                       "dietaryTags":  [
+                                           "Recommended"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082082Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:82911e71d53bb51616e2",
+                       "name":  "National Sons\u0027 Day Special Bento Poster Cake (300gm)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  419,
+                       "finalPrice":  419,
+                       "description":  "Serves 6 | Make National Son\u0027s Day sweeter with this eggless milk chocolate bento cake, topped with a special message made just for your son.",
+                       "categoryName":  "National Sons\u0027 Day Special",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/9/26/59d765cc-61f8-43f2-b2f6-c959a10ce636_4ba282be-8434-42c0-a9c6-6a5d73e5b0a7.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "National Sons\u0027 Day Special"
+                                ],
+                       "dietaryTags":  [
+                                           "National Sons\u0027 Day Special"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082098Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:135fe307ed4496b3cff1",
+                       "name":  "National Sons\u0027 Day Choco Truffle Poster Cake (500gm)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  599,
+                       "finalPrice":  599,
+                       "description":  "Serves 6 | Celebrate National Son\u0027s Day with rich chocolate layers and a special themed poster design. This eggless choco truffle cake is a delicious token of love to make your son feel celebrated.",
+                       "categoryName":  "National Sons\u0027 Day Special",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/9/26/a325e334-f0f5-4df4-81fb-2f27c016e1f9_9b54fe29-c6e7-4c9d-8c42-419cdcec81e2.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "National Sons\u0027 Day Special"
+                                ],
+                       "dietaryTags":  [
+                                           "National Sons\u0027 Day Special"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082108Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:50bfc4304c626e152843",
+                       "name":  "National Sons\u0027 Day Choco Poster Jar Cake Duo (180ml each)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  329,
+                       "finalPrice":  329,
+                       "description":  "Serves 2 | Surprise your son on National Son\u0027s Day with a duo of eggless Choco Poster Jar Cakes. Rich, chocolaty, and thoughtfully designed, they’re a sweet little treat to make his special day even sweeter.",
+                       "categoryName":  "National Sons\u0027 Day Special",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/9/26/65733fd6-522f-42b5-a68c-455ee611b5f7_cc3eaf0c-00fd-4b17-a381-c7439793fa99.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "National Sons\u0027 Day Special"
+                                ],
+                       "dietaryTags":  [
+                                           "National Sons\u0027 Day Special"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082118Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:87413184d9e4fcaefcdc",
+                       "name":  "National Sons\u0027 Day Special Walnut Brownie Duo",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  229,
+                       "finalPrice":  229,
+                       "description":  "Serves 2 | Make National Son\u0027s Day extra special with a duo of rich, eggless walnut brownies. Fudgy, nutty, and baked with love, these treats are a delicious way to surprise your favourite boy.",
+                       "categoryName":  "National Sons\u0027 Day Special",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/9/26/f72ab86e-6fd2-486e-bc62-b243ab1091ab_91202925-42df-45e3-b4d1-5a277696a00c.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "National Sons\u0027 Day Special"
+                                ],
+                       "dietaryTags":  [
+                                           "National Sons\u0027 Day Special"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082144Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:9c8dba45633adf54fed9",
+                       "name":  "Assorted Chocolate Praline Box ( Set of 9)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  522,
+                       "finalPrice":  522,
+                       "description":  "Serves 2 | Make any occasion a little more indulgent with this eggless gourmet praline assortment. It includes three each of dark chocolate with hazelnut, milk chocolate with almond, and white chocolate with cashew, bringing rich flavours together in a gift worth sharing.",
+                       "categoryName":  "Chocolates",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/8/21/d62dc513-9e23-4ee8-af7d-7055d0085cf6_210a369e-5381-42af-b4e9-503478bdcb0d.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Chocolates"
+                                ],
+                       "dietaryTags":  [
+                                           "Chocolates"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082158Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:74709c5d84905e66bd3e",
+                       "name":  "Almond Chocolate Barks (100g)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  180,
+                       "finalPrice":  180,
+                       "description":  "Serves 2 | A crunchy-crisp eggless layer of roasted almonds, golden caramel, and smooth chocolate sheets. Made to gift, perfect to munch, and crafted to satisfy every sweet craving in every bite.",
+                       "categoryName":  "Chocolates",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/7/30/866528d5-0c6e-4ea0-bab2-e9ca868a627c_a50e56d2-96f3-429f-a12c-1a0f0fc2579b.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Chocolates"
+                                ],
+                       "dietaryTags":  [
+                                           "Chocolates"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082169Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:cb07c69e026580a38dc6",
+                       "name":  "Caramel Sea Salt Chocolate Bar (100gm)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  199,
+                       "finalPrice":  199,
+                       "description":  "Serves 1 | Smooth milk chocolate encases warm salted caramel and a velvety dark chocolate mousse centre in this eggless bar, delivering rich flavour with a subtle salty finish.",
+                       "categoryName":  "Chocolates",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/1/27/e0df20c3-260c-4484-9ee2-61f0e113a938_fd4f4f42-d50e-4fcd-8def-0a558f8ccf8a.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Chocolates"
+                                ],
+                       "dietaryTags":  [
+                                           "Chocolates"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082177Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:252f10180a8923aa713d",
+                       "name":  "Kunafa Chocolate Bar",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  205,
+                       "finalPrice":  205,
+                       "description":  "Serves 1 | A comforting Middle Eastern delight that blends smooth chocolate flavour with a light crunch, perfect for adding a little sweetness to any moment.",
+                       "categoryName":  "Chocolates",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/9/3/8ee00549-12f7-4695-ac3e-f4ca3b65cf41_f17927f2-9ee3-4e65-a6dc-ddd87bd661e5.jpg",
+                       "inStock":  true,
+                       "itemRating":  5,
+                       "itemRatingCount":  3,
+                       "tags":  [
+                                    "Chocolates"
+                                ],
+                       "dietaryTags":  [
+                                           "Chocolates"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082186Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:24538ccc031372aee3cd",
+                       "name":  "Assorted Fudge Box (Set of 9)",
+                       "restaurant":  "Bakingo",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                       "price":  427,
+                       "finalPrice":  427,
+                       "description":  "Serves 2 | Indulge in fudge flavours that go beyond the usual. Date \u0026 Mixed Nut offers rich, nutty sweetness, Orange \u0026 Dark Chocolate adds a citrusy cocoa kick, while Paan \u0026 White Chocolate brings a creamy, distinctly Indian twist. Perfect for gifting, sharing, or a little self-indulgence.",
+                       "categoryName":  "Chocolates",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2026/8/21/b5f09077-c8dd-4291-92ea-abe33544ff90_1c5844c5-d6a5-47cc-909d-8443579f4a7b.jpg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Chocolates"
+                                ],
+                       "dietaryTags":  [
+                                           "Chocolates"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082196Z",
+                       "regionPincode":  "202001"
+                   },
+                   {
+                       "id":  "swiggy:c6923c3504203cad9182",
+                       "name":  "Mothers Day Strawberry Cake 500g",
+                       "restaurant":  "Jassi\u0027s Breads \u0026 Bytes",
+                       "restaurant_url":  "https://www.swiggy.com/city/aligarh/jassis-breads-and-bytes-samad-road-rest104169",
+                       "listing_url":  "https://www.swiggy.com/city/aligarh/jassis-breads-and-bytes-samad-road-rest104169",
+                       "price":  450,
+                       "finalPrice":  450,
+                       "description":  null,
+                       "categoryName":  "Best In Mother’s Day Cake",
+                       "imageUrl":  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2025/5/7/d15611b6-3fcb-4b14-b30c-ac32da587175_0371464c-c6cb-4d93-bffe-b66c87661d0a.jpeg",
+                       "inStock":  true,
+                       "itemRating":  0,
+                       "itemRatingCount":  0,
+                       "tags":  [
+                                    "Best In Mother’s Day Cake"
+                                ],
+                       "dietaryTags":  [
+                                           "Best In Mother’s Day Cake"
+                                       ],
+                       "isVegetarian":  true,
+                       "isVegan":  false,
+                       "allergens":  [
+
+                                     ],
+                       "allergenVerified":  false,
+                       "allergenFreeFor":  [
+
+                                           ],
+                       "dietaryVerified":  true,
+                       "pincode":  "202001",
+                       "pincodeVerified":  true,
+                       "provider":  "swiggy",
+                       "checkedAt":  "2026-09-29T04:50:47.082205Z",
+                       "regionPincode":  "202001"
+                   }
+               ],
+    "restaurants":  [
+                        {
+                            "id":  "swiggy:1286f39fe41be95ba3ad",
+                            "name":  "Bakingo",
+                            "provider":  "swiggy",
+                            "url":  "https://www.swiggy.com/city/aligarh/bakingo-ramghat-road-koil-tahsil-ada-colony-phase-i-rest1352949",
+                            "pincode":  "202001",
+                            "pincodeVerified":  true,
+                            "cuisine":  "Bakery, Desserts, Beverages, Snacks",
+                            "regionPincode":  "202001"
+                        },
+                        {
+                            "id":  "swiggy:159736a0232e7024cde0",
+                            "name":  "Jassi\u0027s Breads \u0026 Bytes",
+                            "provider":  "swiggy",
+                            "url":  "https://www.swiggy.com/city/aligarh/jassis-breads-and-bytes-samad-road-rest104169",
+                            "pincode":  "202001",
+                            "pincodeVerified":  true,
+                            "cuisine":  "Bakery, Fast Food, Desserts",
+                            "regionPincode":  "202001"
+                        },
+                        {
+                            "id":  "swiggy:447360d000968e6c10b2",
+                            "name":  "McDonald\u0027s",
+                            "provider":  "swiggy",
+                            "url":  "https://www.swiggy.com/city/aligarh/mcdonalds-gulzar-nagar-civil-lines-rest254137",
+                            "pincode":  "202001",
+                            "pincodeVerified":  true,
+                            "cuisine":  "American, Fast Food, Beverages",
+                            "regionPincode":  "202001"
+                        },
+                        {
+                            "id":  "swiggy:81fb83e0213e6fed9944",
+                            "name":  "Moolchand And Sons",
+                            "provider":  "swiggy",
+                            "url":  "https://www.swiggy.com/city/aligarh/moolchand-and-sons-civil-lines-rest1025883",
+                            "pincode":  "202001",
+                            "pincodeVerified":  true,
+                            "cuisine":  "Snacks",
+                            "regionPincode":  "202001"
+                        },
+                        {
+                            "id":  "swiggy:128b17b1cf64fd1d1dd6",
+                            "name":  "Shibboji Kachori Bhandar",
+                            "provider":  "swiggy",
+                            "url":  "https://www.swiggy.com/city/aligarh/shibboji-kachori-bhandar-khai-dora-phool-chowk-rest728503",
+                            "pincode":  "202001",
+                            "pincodeVerified":  true,
+                            "cuisine":  "Snacks, Sweets",
+                            "regionPincode":  "202001"
+                        }
+                    ]
+}
