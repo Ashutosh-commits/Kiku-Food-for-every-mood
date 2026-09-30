@@ -11,6 +11,11 @@ export class KikuApiError extends Error {
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 20_000;
 const ASSISTANT_REQUEST_TIMEOUT_MS = 75_000;
+const API_BASE_URL = String(import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+
+function apiUrl(path: string) {
+  return API_BASE_URL ? `${API_BASE_URL}${path}` : path;
+}
 
 async function request<T>(path: string, options: RequestInit = {}, timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS): Promise<T> {
   const headers = new Headers(options.headers || {});
@@ -22,7 +27,7 @@ async function request<T>(path: string, options: RequestInit = {}, timeoutMs = D
   const onAbort = () => controller.abort();
   options.signal?.addEventListener("abort", onAbort, { once: true });
   try {
-    const response = await fetch(path, { ...options, headers, credentials: "include", signal: controller.signal });
+    const response = await fetch(apiUrl(path), { ...options, headers, credentials: "include", signal: controller.signal });
   const payload = await response.json().catch(() => null);
     if (!response.ok) {
       const message = payload?.error?.message || `Request failed with ${response.status}.`;
